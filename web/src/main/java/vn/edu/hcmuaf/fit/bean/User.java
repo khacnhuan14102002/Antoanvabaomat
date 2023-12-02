@@ -3,6 +3,7 @@ package vn.edu.hcmuaf.fit.bean;
 
 //import java.util.Date;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 
 public class User {
@@ -17,8 +18,27 @@ public class User {
     private int Active;
     private String Keyactive;
     private int Manager;
-//	public User(){
-//	}
+
+    private RSAKeyGenerator rsaKeys;
+
+    public User(String NameUser) throws NoSuchAlgorithmException {
+        this.NameUser = NameUser;
+        this.rsaKeys = new RSAKeyGenerator();
+    }
+
+
+    public void generateKeys() {
+        this.rsaKeys.createKeys();
+    }
+
+
+    public String getPublicKey() {
+        return this.rsaKeys.getPublicKey();
+    }
+
+    public String getPrivateKey() {
+        return this.rsaKeys.getPrivateKey();
+    }
 
     public User(String nameUser, String emailUs, String pass, String phone, Date registrationDate, int roleUs, int manager, int active, String keyactive) {
         NameUser = nameUser;
@@ -156,5 +176,14 @@ public class User {
     public String toString() {
         return "User [IdUser=" + IdUser + ", NameUser=" + NameUser + ", EmailUs=" + EmailUs + ", Pass=" + Pass
                 + ", Phone=" + Phone + ", RoleUs=" + RoleUs + ", Manager=" + Manager + ", Active=" + Active + ", Keyactive=" + Keyactive + "]";
+    }
+
+    public static void main(String[] args) throws NoSuchAlgorithmException {
+        User user = new User("Alice");
+        user.generateKeys();
+        String publicKey = user.getPublicKey();
+        String privateKey = user.getPrivateKey();
+        System.out.println("Public key: " + publicKey);
+        System.out.println("Private key: " + privateKey);
     }
 }

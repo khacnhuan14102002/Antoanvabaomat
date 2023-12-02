@@ -247,6 +247,30 @@ public class UserDao {
         }
     }
 
+    // Phương thức để thêm khóa vào bảng UserKeys
+    public static void insertUserKeys(int userId, String publicKey, String privateKey) {
+        try (Connection conn = getConnect()) {
+            // Truy vấn SQL để thêm hoặc cập nhật khóa cho người dùng
+            String sql = "INSERT INTO UserKeys (UserId, PublicKey, PrivateKey, ReportDate) VALUES (?, ?, ?, ?) "
+                    + "ON DUPLICATE KEY UPDATE PublicKey = ?, PrivateKey = ?, ReportDate = ?";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, userId);
+                pstmt.setString(2, publicKey);
+                pstmt.setString(3, privateKey);
+                pstmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+                pstmt.setString(5, publicKey);
+                pstmt.setString(6, privateKey);
+                pstmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
+
+                pstmt.executeUpdate();
+                conn.commit();  // Commit changes
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         int userId = 3; // IdUser của người dùng cần kiểm tra
 
@@ -259,7 +283,7 @@ public class UserDao {
 //        } else {
 //            System.out.println("User not found.")
 //        }
-        userDao.saveUser(new User("thi","â@gmail.com","12","121332313",new Date(2023-06-24),1,1,1));
+//        userDao.saveUser(new User("thi", "â@gmail.com", "12", "121332313", new Date(2023 - 06 - 24), 1, 1, 1));
     }
 
 }

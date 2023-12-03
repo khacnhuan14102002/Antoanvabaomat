@@ -28,8 +28,12 @@
 	<input name="pass" type="text" class="form-control" value="${user.getPass()}">
 	<label>Số điện thoại</label>
 	<input name="sdt" type="text" class="form-control" value="${user.getPhone()}">
-	<button class="btn btn-success">Cập nhật</button>
+	<label>public key</label>
+	<input name="publickey" type="text" class="form-control" value="">
 
+	<button class="btn btn-success" style="margin-left: 30px;">Cập nhật</button>
+	<button class="btn btn-success" style="margin-left: 30px;">Tạo key</button>
+	<button class="btn btn-success" style="margin-left: 30px;">Quên key</button>
 </form>
 </div>
 </body>

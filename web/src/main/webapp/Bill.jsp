@@ -32,7 +32,7 @@
 </table>
 <p>Tổng cộng: 300,000 VND</p>
 <img src="path_to_digital_signature_image" alt="Chữ Ký Số">
-<p>Chữ ký điện tử: [Chữ ký điện tử của người bán]</p>
+<p>Chữ ký điện tử: [Chữ ký điện tử của người bán</p>
 </body>
 </html>
 

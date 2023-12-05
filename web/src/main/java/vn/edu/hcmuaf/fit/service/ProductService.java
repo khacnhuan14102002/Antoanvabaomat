@@ -184,9 +184,10 @@ public class    ProductService {
     public static void main(String[] args) {
         ProductService pro = new ProductService();
 
-        products p = new products(1,"DC", "Đại Dương", "./image/dc2.jpg", 150000, 250000, 55, "Sản phẩm được lấy ý tưởng từ hình ảnh màu xanh của nước biển kết hợp với lông vũ màu xanh khiến cho sản phẩm đẹp hơn bao giờ hết", 1, 40);
-        pro.updateProduct(p);
-        System.out.println(pro.getTop10SanPhamBanChay());
+//        products p = new products(1,"DC", "Đại Dương", "./image/dc2.jpg", 150000, 250000, 55, "Sản phẩm được lấy ý tưởng từ hình ảnh màu xanh của nước biển kết hợp với lông vũ màu xanh khiến cho sản phẩm đẹp hơn bao giờ hết", 1, 40);
+//        pro.updateProduct(p);
+//        System.out.println(pro.getTop10SanPhamBanChay());
+        System.out.println(pro.getprobyId(1).toString());
     }
 
 }

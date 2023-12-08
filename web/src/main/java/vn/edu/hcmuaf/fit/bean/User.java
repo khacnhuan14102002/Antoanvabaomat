@@ -1,3 +1,8 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package vn.edu.hcmuaf.fit.bean;
 
 
@@ -19,26 +24,26 @@ public class User {
     private String Keyactive;
     private int Manager;
 
-    private RSAKeyGenerator rsaKeys;
+//    private RSAKeyGenerator rsaKeys;
 
-    public User(String NameUser) throws NoSuchAlgorithmException {
-        this.NameUser = NameUser;
-        this.rsaKeys = new RSAKeyGenerator();
-    }
-
-
-    public void generateKeys() {
-        this.rsaKeys.createKeys();
-    }
-
-
-    public String getPublicKey() {
-        return this.rsaKeys.getPublicKey();
-    }
-
-    public String getPrivateKey() {
-        return this.rsaKeys.getPrivateKey();
-    }
+//    public User(int IdUser) throws NoSuchAlgorithmException {
+//        this.IdUser = IdUser;
+//        this.rsaKeys = new RSAKeyGenerator();
+//    }
+//
+//
+//    public void generateKeys() {
+//        this.rsaKeys.createKeys();
+//    }
+//
+//
+//    public String getPublicKey() {
+//        return this.rsaKeys.getPublicKey();
+//    }
+//
+//    public String getPrivateKey() {
+//        return this.rsaKeys.getPrivateKey();
+//    }
 
     public User(String nameUser, String emailUs, String pass, String phone, Date registrationDate, int roleUs, int manager, int active, String keyactive) {
         NameUser = nameUser;
@@ -179,11 +184,11 @@ public class User {
     }
 
     public static void main(String[] args) throws NoSuchAlgorithmException {
-        User user = new User("Alice");
-        user.generateKeys();
-        String publicKey = user.getPublicKey();
-        String privateKey = user.getPrivateKey();
-        System.out.println("Public key: " + publicKey);
-        System.out.println("Private key: " + privateKey);
+//        User user = new User(1);
+//        user.generateKeys();
+//        String publicKey = user.getPublicKey();
+//        String privateKey = user.getPrivateKey();
+//        System.out.println("Public key: " + publicKey);
+//        System.out.println("Private key: " + privateKey);
     }
 }

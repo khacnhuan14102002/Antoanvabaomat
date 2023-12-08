@@ -259,9 +259,9 @@ public class UserDao {
                 pstmt.setString(2, publicKey);
                 pstmt.setString(3, privateKey);
                 pstmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-                pstmt.setString(5, publicKey);
-                pstmt.setString(6, privateKey);
-                pstmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
+//                pstmt.setString(5, publicKey);
+//                pstmt.setString(6, privateKey);
+//                pstmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
 
                 pstmt.executeUpdate();
                 conn.commit();  // Commit changes

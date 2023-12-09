@@ -38,9 +38,37 @@ public class OrderService {
         }
         return list;
     }
+    public static Invoice getIn(int idU){
+        Invoice in = new Invoice();
+        String query = "SELECT * \n" +
+                "FROM invoices\n" +
+                "WHERE idUs ='" +idU+ "' ORDER BY Exportdate DESC\n" +
+                "LIMIT 1";
+        try {
+            conn = new connect().getconConnection(); //mo ket noi voi sql
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                in.setIdIn(rs.getInt(1));
+                        in.setNameuser(rs.getString(2));
+                       in.setAddress(rs.getString(3));
+                        in.setType(rs.getString(4));
+                        in.setStatusIn(rs.getString(5));
+                        in.setTotal(rs.getDouble(6));
+                        in.setDatecreate(rs.getTimestamp(7));
+                        in.setPhone(rs.getString(8));
+                        in.setIdUs(rs.getInt(9));
+
+            }
+        } catch (Exception e) {
+            System.out.println("fail");
+        }
+        return in;
+
+    }
 
     public static void main(String[] args) {
         OrderService order = new OrderService();
-        System.out.println(order.getAllInvoice());
+        System.out.println(order.getIn(3));
     }
 }

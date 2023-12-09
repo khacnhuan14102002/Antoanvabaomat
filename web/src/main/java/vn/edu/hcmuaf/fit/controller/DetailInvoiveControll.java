@@ -10,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +27,18 @@ public class DetailInvoiveControll extends HttpServlet {
         }catch(NumberFormatException e){
             e.printStackTrace();
         }
+        StringBuilder randomCode = new StringBuilder("SHM");
+
+        SecureRandom random = new SecureRandom();
+        for (int i = 0; i < 6; i++) {
+            int randomDigit = random.nextInt(10);
+            randomCode.append(randomDigit);
+        }
+
+       String code = randomCode.toString();
         ArrayList<DetailInvoice> listde = detail.getAllIn(invoiceid);
         List<products> p = mn.getAllProduct();
+        request.setAttribute("code",code);
         request.setAttribute("listp",p);
         request.setAttribute("listde",listde);
        request.getRequestDispatcher("DetailHistory.jsp").forward(request,response);

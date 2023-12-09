@@ -1,10 +1,14 @@
-<%--
+<%@ page import="vn.edu.hcmuaf.fit.bean.products" %>
+<%@ page import="java.util.List" %>
+<%@ page import="vn.edu.hcmuaf.fit.bean.DetailInvoice" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: tranl
   Date: 12/4/2023
   Time: 10:01 PM
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8"  %>
 <html lang="en">
 <head>
@@ -66,12 +70,12 @@
 
     <div class="invoice-details">
         <div>
-            <p><strong>Người Nhận:</strong> John Doe</p>
-            <p><strong>Địa Chỉ:</strong> 123 Main Street, Cityville</p>
+            <p><strong>Người Nhận:</strong> ${invoice.nameuser}</p>
+            <p><strong>Địa Chỉ:</strong> ${invoice.address}</p>
         </div>
         <div>
-            <p><strong>Số Hóa Đơn:</strong> INV-12345</p>
-            <p><strong>Ngày Tạo:</strong> 2023-01-01</p>
+            <p><strong>Số Hóa Đơn:</strong>${invoice.idIn}</p>
+            <p><strong>Ngày Tạo:</strong> ${invoice.datecreate}</p>
         </div>
     </div>
 
@@ -86,23 +90,33 @@
         </thead>
         <tbody>
         <tr>
-            <td>Item 1</td>
-            <td>2</td>
-            <td>$50.00</td>
-            <td>$100.00</td>
-        </tr>
-        <tr>
-            <td>Item 2</td>
-            <td>1</td>
-            <td>$75.00</td>
-            <td>$75.00</td>
+            <%
+                List<DetailInvoice> listde = (List<DetailInvoice>) request.getAttribute("listde");
+                List<products> listp = (List<products>) request.getAttribute("listp");
+
+                for (DetailInvoice de : listde) {
+                    for (products ma : listp) {
+                        if (de.getIdpro() == ma.getIdProduct()) {
+            %>
+            <td class=""><%= ma.getNameProduct() %></td>
+            <td class=""><%= de.getQuantity() %></td>
+            <td class=""><%= de.getPrice() %></td>
+            <td class=""><%= de.getPrice() * de.getQuantity() %></td>
         </tr>
         </tbody>
+
+            <%    }
+            }
+            }%>
     </table>
 
     <div class="total">
-        <p><strong>Tổng Cộng:</strong> $175.00</p>
+        <form action="">
+            <button>Xác nhận</button>
+        </form>
+        <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>
     </div>
+
 </div>
 
 </body>

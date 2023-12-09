@@ -66,7 +66,7 @@ public class CheckoutControll extends HttpServlet {
         if(phuonthucthanhtoan.equals("ck")){
             response.sendRedirect("/ck.jsp");
         }else {
-            response.sendRedirect("/checksuccess");
+            response.sendRedirect("/order");
         }
     return;
     }

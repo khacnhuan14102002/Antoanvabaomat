@@ -5,6 +5,8 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="vn.edu.hcmuaf.fit.bean.ProductCart" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="vn.edu.hcmuaf.fit.bean.DetailInvoice" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,6 +35,51 @@
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <link href="build/css/manager.css" rel="stylesheet" type="text/css"/>
+        <style>
+            /*body {*/
+            /*    font-family: Arial, sans-serif;*/
+            /*    background-color: #f4f4f4;*/
+            /*    margin: 0;*/
+            /*    padding: 0;*/
+            /*}*/
+
+            .invoice-container {
+                width: 80%;
+                margin: 20px auto;
+                background-color: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                border-radius: 8px;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .invoice-details {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 20px;
+            }
+
+            .invoice-items {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+
+            .invoice-items th, .invoice-items td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: left;
+            }
+
+            .total {
+                margin-top: 20px;
+                text-align: right;
+            }
+        </style>
 <body>
 <header>
     <div id="top-header">
@@ -101,36 +148,60 @@
                 <h1 class="title">CHI TIẾT HÓA ĐƠN</h1>
             </div>
             <div class="col-lg-12 col-sm-12 hero-feature">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                        <tr>
-                            <td>STT</td>
-                            <td class="" >MÃ SẢN PHẨM</td>
-                            <td class="" >HÌNH ẢNH</td>
-                            <td class="" >SỐ LƯỢNG</td>
-                            <td class="">GIÁ</td>
-                            <td class="">TỔNG TIỀN</td>
-                        </tr>
-                        </thead>
-                        <c:forEach var="c" items="${requestScope.listde}" varStatus="loop">
-                            <c:forEach var="p" items="${requestScope.listp}" varStatus="loop">
-                                <c:if test="${p.getIdProduct()==c.getIdpro()}">
-                            <tbody>
-                            <td>${loop.index+1}</td>
-                            <td class="" >${c.getIdpro()}</td>
-                            <td class="" ><img src="${p.getImage()}" width="47" height="47"></td>
-                            <td class="" >${c.getQuantity()}</td>
-                            <td class="">${c.getPrice()}</td>
-                            <td class="">${c.getPrice()*c.getQuantity()}</td>
-                        </tbody> </c:if>
-                            </c:forEach>
-                        </c:forEach>
-                    </table>
+                <div class="invoice-details">
+                    <div>
+                        <p><strong>Người Nhận:</strong> ${invoice.nameuser}</p>
+                        <p><strong>Địa Chỉ:</strong> ${invoice.address}</p>
+                    </div>
+                    <div>
+                        <p><strong>Số Hóa Đơn:</strong>${invoice.idIn}</p>
+                        <p><strong>Ngày Tạo:</strong> ${invoice.datecreate}</p>
+                    </div>
                 </div>
+
+                <table class="invoice-items">
+                    <thead>
+                    <tr>
+                        <th>Mặt Hàng</th>
+                        <th>Số Lượng</th>
+                        <th>Đơn Giá</th>
+                        <th>Thành Tiền</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <%
+                            List<DetailInvoice> listde = (List<DetailInvoice>) request.getAttribute("listde");
+                            List<products> listp = (List<products>) request.getAttribute("listp");
+
+                            for (DetailInvoice de : listde) {
+                                for (products ma : listp) {
+                                    if (de.getIdpro() == ma.getIdProduct()) {
+                        %>
+                        <td class=""><%= ma.getNameProduct() %></td>
+                        <td class=""><%= de.getQuantity() %></td>
+                        <td class=""><%= de.getPrice() %></td>
+                        <td class=""><%= de.getPrice() * de.getQuantity() %></td>
+                    </tr>
+                    </tbody>
+
+                    <%    }
+                    }
+                    }%>
+                </table>
+
+                <div class="total">
+
+                    <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>
+                </div>
+
+            </div>
             </div>
             <div class="btn-group btns-cart">
                 <button type="button" class="bt btn btn-primary"><i class="fa fa-arrow-circle-left"></i><a href="/index">Trở về trang chủ</a></button>
+<%--                <form action="">--%>
+<%--                    <button>Xác nhận</button>--%>
+<%--                </form>--%>
             </div>
         </div>
     </div>

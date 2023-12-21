@@ -33,10 +33,24 @@
                autofocus="">
         <input type="password" id="repass" class="form-control" placeholder="Nhập lại mật khẩu" required autofocus="">
 
-        <input type="radio" id="css" name="fav_language" value="CSS">
+        <%--        <input type="radio" id="css" name="fav_language" value="CSS">--%>
+        <%--        <label for="css">Có key</label><br>--%>
+        <%--        <input type="radio" id="javascript" name="fav_language" value="JavaScript">--%>
+        <%--        <label for="javascript">Chưa có key</label>--%>
+        <!-- Các trường nhập liệu khác ở đây -->
+
+        <input type="radio" id="css" name="fav_language" value="CSS" onchange="handleKeyOptionChange()">
         <label for="css">Có key</label><br>
-        <input type="radio" id="javascript" name="fav_language" value="JavaScript">
+        <input type="radio" id="javascript" name="fav_language" value="JavaScript" onchange="handleKeyOptionChange()">
         <label for="javascript">Chưa có key</label>
+
+        <div id="keyInputField" style="display:none;">
+            <label for="key">Nhập key:</label>
+            <input type="text" id="key" name="key" class="form-control" placeholder="Nhập key" required autofocus="">
+        </div>
+
+        <!-- Các nút và trường khác ở đây -->
+
 
         <button class="btn btn-success btn-block" type="submit"><i class="fas fa-user-plus"></i> Đăng kí</button>
         <hr>
@@ -58,6 +72,33 @@
         }
     }
 </script>
+<script type="text/javascript">
+    function handleKeyOptionChange() {
+        var radioValue = document.querySelector('input[name="fav_language"]:checked');
+        if (radioValue && radioValue.value === "JavaScript") {
+            // Nếu chọn "Chưa có key", ẩn trường nhập key
+            document.getElementById("keyInputField").style.display = "none";
+
+            // Thực hiện logic tạo key và hiển thị key
+            generateAndDisplayKey();
+        } else {
+            // Nếu chọn "Có key", hiển thị trường nhập key
+            document.getElementById("keyInputField").style.display = "block";
+        }
+    }
+
+    function generateAndDisplayKey() {
+        // Thực hiện logic tạo key ở đây
+        var generatedKey = "KeyGenerated123"; // Thay bằng logic thực tế
+
+        // Hiển thị key trong trường nhập key
+        document.getElementById("key").value = generatedKey;
+    }
+    function generateKey() {
+        fetch("/KeyController?action=generate", {method: "POST"});
+    }
+</script>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"

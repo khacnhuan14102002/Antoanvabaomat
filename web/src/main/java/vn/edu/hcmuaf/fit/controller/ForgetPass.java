@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import vn.edu.hcmuaf.fit.dao.UserDao;
-import vn.edu.hcmuaf.fit.service.MailService;
+//import vn.edu.hcmuaf.fit.service.MailService;
 
 @WebServlet(value = {"/forget"})
 public class ForgetPass extends HttpServlet{
@@ -30,15 +30,15 @@ public class ForgetPass extends HttpServlet{
         resp.setContentType("text/html;charset=UTF-8");
         req.setCharacterEncoding("utf8");
         String email = req.getParameter("email");
-        String pass = MailService.randomPassword();
-        userDao.updatePassword(pass, email);
-        Thread run = new Thread(new Runnable() {
-            public void run() {
-                new MailService().sendMail(email,
-                        "mat khau moi cua ban la: "+pass);
-            }
-        });
-        run.start();
+//        String pass = MailService.randomPassword();
+//        userDao.updatePassword(pass, email);
+//        Thread run = new Thread(new Runnable() {
+//            public void run() {
+//                new MailService().sendMail(email,
+//                        "mat khau moi cua ban la: "+pass);
+//            }
+//        });
+//        run.start();
         resp.sendRedirect(req.getContextPath() + "/login");
     }
 

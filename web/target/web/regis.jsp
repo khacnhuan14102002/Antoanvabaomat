@@ -32,22 +32,21 @@
         <input type="text" id="user-so" name="sodt" class="form-control" placeholder="Số điện thoại" required=""
                autofocus="">
         <input type="password" id="repass" class="form-control" placeholder="Nhập lại mật khẩu" required autofocus="">
-
         <%--        <input type="radio" id="css" name="fav_language" value="CSS">--%>
         <%--        <label for="css">Có key</label><br>--%>
         <%--        <input type="radio" id="javascript" name="fav_language" value="JavaScript">--%>
         <%--        <label for="javascript">Chưa có key</label>--%>
         <!-- Các trường nhập liệu khác ở đây -->
 
-        <input type="radio" id="css" name="fav_language" value="CSS" onchange="handleKeyOptionChange()">
-        <label for="css">Có key</label><br>
-        <input type="radio" id="javascript" name="fav_language" value="JavaScript" onchange="handleKeyOptionChange()">
-        <label for="javascript">Chưa có key</label>
+<%--        <input type="radio" id="css" name="fav_language" value="CSS" onchange="handleKeyOptionChange()">--%>
+<%--        <label for="css">Có key</label><br>--%>
+<%--        <input type="radio" id="javascript" name="fav_language" value="JavaScript" onchange="handleKeyOptionChange()">--%>
+<%--        <label for="javascript">Chưa có key</label>--%>
 
-        <div id="keyInputField" style="display:none;">
-            <label for="key">Nhập key:</label>
-            <input type="text" id="key" name="key" class="form-control" placeholder="Nhập key" required autofocus="">
-        </div>
+<%--        <div id="keyInputField" style="display:none;">--%>
+<%--            <label for="key">Nhập key:</label>--%>
+<%--            <input type="text" id="key" name="key" class="form-control" placeholder="Nhập key" required autofocus="">--%>
+<%--        </div>--%>
 
         <!-- Các nút và trường khác ở đây -->
 
@@ -72,32 +71,39 @@
         }
     }
 </script>
-<script type="text/javascript">
-    function handleKeyOptionChange() {
-        var radioValue = document.querySelector('input[name="fav_language"]:checked');
-        if (radioValue && radioValue.value === "JavaScript") {
-            // Nếu chọn "Chưa có key", ẩn trường nhập key
-            document.getElementById("keyInputField").style.display = "none";
+<%--<script type="text/javascript">--%>
+<%--    function handleKeyOptionChange() {--%>
+<%--        var radioValue = document.querySelector('input[name="fav_language"]:checked');--%>
+<%--        if (radioValue && radioValue.value === "JavaScript") {--%>
+<%--            // Nếu chọn "Chưa có key", ẩn trường nhập key--%>
+<%--            document.getElementById("keyInputField").style.display = "none";--%>
 
-            // Thực hiện logic tạo key và hiển thị key
-            generateAndDisplayKey();
-        } else {
-            // Nếu chọn "Có key", hiển thị trường nhập key
-            document.getElementById("keyInputField").style.display = "block";
-        }
-    }
+<%--            // Thực hiện logic tạo key và lưu vào database--%>
+<%--            generateAndSaveKey();--%>
+<%--        } else {--%>
+<%--            // Nếu chọn "Có key", hiển thị trường nhập key--%>
+<%--            document.getElementById("keyInputField").style.display = "block";--%>
+<%--        }--%>
+<%--    }--%>
 
-    function generateAndDisplayKey() {
-        // Thực hiện logic tạo key ở đây
-        var generatedKey = "KeyGenerated123"; // Thay bằng logic thực tế
-
-        // Hiển thị key trong trường nhập key
-        document.getElementById("key").value = generatedKey;
-    }
-    function generateKey() {
-        fetch("/KeyController?action=generate", {method: "POST"});
-    }
-</script>
+<%--    function generateAndSaveKey() {--%>
+<%--        fetch("/KeyController", {--%>
+<%--            method: "POST",--%>
+<%--            headers: {--%>
+<%--                "Content-Type": "application/x-www-form-urlencoded",--%>
+<%--            },--%>
+<%--            body: "keyOption=JavaScript",--%>
+<%--        })--%>
+<%--            .then(response => response.text())--%>
+<%--            .then(data => {--%>
+<%--                // Hiển thị key trong trường nhập key--%>
+<%--                document.getElementById("key").value = data;--%>
+<%--            })--%>
+<%--            .catch(error => {--%>
+<%--                console.error("Error:", error);--%>
+<%--            });--%>
+<%--    }--%>
+<%--</script>--%>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

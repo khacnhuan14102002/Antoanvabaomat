@@ -43,7 +43,7 @@ public class User {
 //
 //    public String getPrivateKey() {
 //        return this.rsaKeys.getPrivateKey();
-//    }
+//    }z
 
     public User(String nameUser, String emailUs, String pass, String phone, Date registrationDate, int roleUs, int manager, int active, String keyactive) {
         NameUser = nameUser;

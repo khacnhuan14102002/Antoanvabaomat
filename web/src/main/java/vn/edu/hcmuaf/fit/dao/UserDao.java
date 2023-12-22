@@ -51,7 +51,7 @@ public class UserDao {
             pre = con.prepareStatement(sql);
             pre.setInt(1, 1);
             pre.setString(2, Keyactive);
-            return pre.executeUpdate() > 0;
+            return pre.executeUpdate() == 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }

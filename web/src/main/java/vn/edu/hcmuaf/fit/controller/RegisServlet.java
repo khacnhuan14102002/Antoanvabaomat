@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import vn.edu.hcmuaf.fit.dao.UserDao;
 import vn.edu.hcmuaf.fit.bean.User;
-import vn.edu.hcmuaf.fit.service.MailService;
+//import vn.edu.hcmuaf.fit.service.MailService;
 
 @WebServlet(value = { "/regis", "/successRegis" })
 public class RegisServlet extends HttpServlet {
@@ -51,25 +51,25 @@ public class RegisServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		resp.setCharacterEncoding("utf-8");
-		String activationKey = MailService.randomKey();
+//		String activationKey = MailService.randomKey();
 		String ten = req.getParameter("fullname");
 		String email = req.getParameter("email");
 		String sdt = req.getParameter("sodt");
 		String pass = req.getParameter("pass");
 
-		Thread run = new Thread(new Runnable() {
-			public void run() {
-				new MailService().sendMail(email,
-						"nhap vao link sau de kich hoat tai khoan: http://localhost:8080/successRegis?key="
-								+ activationKey);
-			}
-		});
-		run.start();
+//		Thread run = new Thread(new Runnable() {
+//			public void run() {
+//				new MailService().sendMail(email,
+//						"nhap vao link sau de kich hoat tai khoan: http://localhost:8080/successRegis?key="
+//								+ activationKey);
+//			}
+//		});
+//		run.start();
 
 		User u = new User();
 		//u.setIdUser(null);
-		u.setKeyactive(activationKey);
-		u.setActive(0);
+//		u.setKeyactive(activationKey);
+		u.setActive(1);
 		u.setEmailUs(email);
 		u.setRoleUs(0);
 		u.setRegistrationDate(new Date(System.currentTimeMillis()));
@@ -78,7 +78,7 @@ public class RegisServlet extends HttpServlet {
 		u.setNameUser(ten);
 		u.setManager(0);
 
-		System.out.println(activationKey);
+//		System.out.println(activationKey);
 		userDao.saveUser(u);
 		resp.sendRedirect(req.getContextPath() + "/login");
 	}

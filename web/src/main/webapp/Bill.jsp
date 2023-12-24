@@ -70,7 +70,7 @@
 
     <div class="invoice-details">
         <div>
-            <p><strong>Người Nhận:</strong> ${invoice.nameuser}</p>
+            <p><strong>Người Nhận:</strong> ${sessionScope.invoice.nameuser}</p>
             <p><strong>Địa Chỉ:</strong> ${invoice.address}</p>
         </div>
         <div>
@@ -111,11 +111,22 @@
     </table>
 
     <div class="total">
+        <div class="signature">
+            <p><strong>Chữ Ký: CTT</strong> ${invoice.signature}</p>
+        </div>
         <form action="">
             <button>Xác nhận</button>
         </form>
         <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>
+        <c:if test="${signatureAdded}">
+            <p style="color: green;">Hóa đơn đã được ký số thành công!</p>
+        </c:if>
+        <c:if test="${not signatureAdded}">
+            <p style="color: red;">Không thể ký hóa đơn. Vui lòng thử lại.</p>
+        </c:if>
+
     </div>
+
 
 </div>
 

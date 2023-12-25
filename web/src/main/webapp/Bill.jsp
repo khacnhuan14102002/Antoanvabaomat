@@ -10,6 +10,31 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8"  %>
+<script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js"></script>
+<script>
+    function signInvoice() {
+        // Lấy dữ liệu cần ký số từ trang
+        var invoiceId = "${invoice.idIn}";
+        var totalAmount = "${invoice.getTotal()}";
+        var recipientName = "${sessionScope.invoice.nameuser}";
+        var recipientAddress = "${invoice.address}";
+        var creationDate = "${invoice.datecreate}";
+
+
+        // Tạo dữ liệu để ký số (ở đây, ví dụ sử dụng mã hóa SHA-256)
+        var signatureData = recipientName + recipientAddress + invoiceId + creationDate + totalAmount;
+        // Gọi lớp tạo khóa để lấy cặp khóa
+        var publicKey = "${yourKeyServiceInstance.getPublicKeyFromDatabase()}";
+        var privateKey = "${yourKeyServiceInstance.getPrivateKeyFromDatabase()}";
+        // Gọi lớp tạo khóa để ký số
+        var signature = "${yourKeyServiceInstance.signData(signatureData, privateKey)}";
+
+        console.log("Signature Data: " + signatureData);
+        console.log("Signature: " + signature);
+        // Gán chữ ký số vào trường hidden trong form
+        document.getElementById("signature").value = signature;
+    }
+</script>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -71,11 +96,11 @@
     <div class="invoice-details">
         <div>
             <p><strong>Người Nhận:</strong> ${sessionScope.invoice.nameuser}</p>
-            <p><strong>Địa Chỉ:</strong> ${invoice.address}</p>
+            <p><strong>Địa Chỉ:</strong> ${sessionScope.invoice.address}</p>
         </div>
         <div>
-            <p><strong>Số Hóa Đơn:</strong>${invoice.idIn}</p>
-            <p><strong>Ngày Tạo:</strong> ${invoice.datecreate}</p>
+            <p><strong>Số Hóa Đơn:</strong>${sessionScope.invoice.idIn}</p>
+            <p><strong>Ngày Tạo:</strong> ${sessionScope.invoice.datecreate}</p>
         </div>
     </div>
 
@@ -91,9 +116,9 @@
         <tbody>
         <tr>
             <%
-                List<DetailInvoice> listde = (List<DetailInvoice>) request.getAttribute("listde");
-                List<products> listp = (List<products>) request.getAttribute("listp");
-
+                List<DetailInvoice> listde = (List<DetailInvoice>) session.getAttribute("listde");
+                List<products> listp = (List<products>) session.getAttribute("listp");
+                if (listde != null && listp != null) {
                 for (DetailInvoice de : listde) {
                     for (products ma : listp) {
                         if (de.getIdpro() == ma.getIdProduct()) {
@@ -107,22 +132,26 @@
 
             <%    }
             }
+            }
             }%>
     </table>
 
     <div class="total">
-        <div class="signature">
-            <p><strong>Chữ Ký: CTT</strong> ${invoice.signature}</p>
-        </div>
-        <form action="">
-            <button>Xác nhận</button>
+        <div class="signature-result" id="signatureResult"></div>
+        <form action="/order" method="post">
+            <button onclick="signInvoice()">Xác nhận và Ký số</button>
         </form>
         <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>
         <c:if test="${signatureAdded}">
             <p style="color: green;">Hóa đơn đã được ký số thành công!</p>
+            <p>Chữ ký: ${sessionScope.signature}</p>
+            <%-- In giá trị chữ ký ra console --%>
+            <%
+                System.out.println("Signature value in JSP: " + session.getAttribute("signature"));
+            %>
         </c:if>
         <c:if test="${not signatureAdded}">
-            <p style="color: red;">Không thể ký hóa đơn. Vui lòng thử lại.</p>
+            <p style="color: red;">An xác nhận  de ký hóa đơn. </p>
         </c:if>
 
     </div>

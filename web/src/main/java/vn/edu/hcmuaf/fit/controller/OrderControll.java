@@ -27,58 +27,62 @@ public class OrderControll extends HttpServlet {
         User user = (User) session.getAttribute("user");
         Invoice invoice = new Invoice();
         invoice = or.getIn(user.getIdUser());
-        request.setAttribute("invoice",invoice);
+        session.setAttribute("invoice",invoice);
         DetailInvoiceService detail = new DetailInvoiceService();
         ManagerService mn = new ManagerService();
         int invoiceid = invoice.getIdIn();
 
         ArrayList<DetailInvoice> listde = detail.getAllIn(invoiceid);
         List<products> p = mn.getAllProduct();
+
         request.setAttribute("listp",p);
         request.setAttribute("listde",listde);
-
+        session.setAttribute("listde", listde);
+        session.setAttribute("listp", p);
         request.getRequestDispatcher("Bill.jsp").forward(request,response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-        // Tạo key pair
-        KeyPair keyPair = new Key().createKey();
-        PrivateKey privateKey = keyPair.getPrivate();
 
-        // Lấy các thông tin từ request (giả sử bạn có các trường dữ liệu từ form)
-        String nameuser = request.getParameter("nameuser");
-            if (nameuser == null) {
-                throw new Exception("Tham số 'nameuser' không tồn tại trong yêu cầu.");
-            }
-        String address = request.getParameter("address");
-        String type = request.getParameter("type");
-        String statusIn = request.getParameter("statusIn");
+        // Lấy chữ ký số từ request
+        String signature = request.getParameter("signature");
 
-        double total = Double.parseDouble(request.getParameter("total"));
-        Timestamp datecreate = new Timestamp(System.currentTimeMillis());
-        String phone = request.getParameter("phone");
-        int idUs = Integer.parseInt(request.getParameter("idUs"));
+        // Thực hiện xác minh chữ ký số, lưu ý: cần có logic xác minh chữ ký thực tế ở đây
+        boolean isSignatureValid = verifySignature(signature);
 
-        // Tạo đối tượng Invoice
-        Invoice invoice = new Invoice(nameuser, address, type, statusIn, total, datecreate, phone, idUs);
+        // Lấy thông tin hóa đơn và sản phẩm từ session hoặc request
+        HttpSession session = request.getSession();
+        Invoice invoice = (Invoice) session.getAttribute("invoice");
+        List<DetailInvoice> listde = (List<DetailInvoice>) session.getAttribute("listde");
+        List<products> listp = (List<products>) session.getAttribute("listp");
+        // Set thông tin vào session để giữ lại sau khi ấn xác nhận
+        session.setAttribute("invoice", invoice);
+        session.setAttribute("listde", listde);
+        session.setAttribute("listp", listp);
 
-        // Tạo và lưu ký số cho hóa đơn
-        invoice.signInvoice(privateKey);
+        System.out.println("Invoice from session: " + invoice);
+        System.out.println("List of DetailInvoice from session: " + listde);
+        System.out.println("List of products from session: " + listp);
 
-        // Lưu thông tin hóa đơn vào request để hiển thị trên trang JSP
-        request.setAttribute("invoice", invoice);
-        request.setAttribute("signatureAdded", true);
 
-        request.setAttribute("successMessage", "Hóa đơn đã ký!");
-        } catch (Exception e) {
-            request.setAttribute("signatureAdded", false);
-            request.setAttribute("errorMessage", e.getMessage());
-
+        // Gán thông báo thành công hoặc thất bại vào thuộc tính để hiển thị trên trang JSP
+        session.setAttribute("signatureAdded", isSignatureValid);
+        if (isSignatureValid) {
+            session.setAttribute("signature", signature);
+            System.out.println("Signature value: " + signature);
         }
-        //         Chuyển hướng đến trang Bill.jsp
-//       request.getRequestDispatcher("/Bill.jsp").forward(request, response);
+        // Tiếp tục xử lý khác nếu cần thiết
+
+        // Chuyển hướng hoặc render lại trang JSP
+        request.getRequestDispatcher("Bill.jsp").forward(request, response);
     }
 
+    private boolean verifySignature(String signature) {
+        // Thực hiện xác minh chữ ký số ở đây, có thể cần sử dụng thư viện mã hóa chữ ký số
+        // Trả về true nếu chữ ký hợp lệ, ngược lại trả về false
+        // Ví dụ: sử dụng thư viện Bouncy Castle để xác minh chữ ký
+        // Đây chỉ là một ví dụ giả định, bạn cần thay đổi để phản ánh thực tế của bạn.
+        return true; // hoặc false nếu xác minh thất bại
+    }
 }

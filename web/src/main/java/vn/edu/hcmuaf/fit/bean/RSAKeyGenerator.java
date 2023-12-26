@@ -8,6 +8,7 @@ public class RSAKeyGenerator {
     private KeyPairGenerator keyGen;
     private KeyPair pair;
 
+
     public RSAKeyGenerator() throws NoSuchAlgorithmException {
         this.keyGen = KeyPairGenerator.getInstance("RSA");
         this.keyGen.initialize(2048);

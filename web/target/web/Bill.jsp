@@ -10,7 +10,11 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8"  %>
-<script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js"></script>
+<%
+    // Lấy khóa riêng tư từ session
+    String privateKey = (String) session.getAttribute("privateKey");
+%>
+<script src="https://kjur.github.io/jsrsasign/jsrsasign-latest-all-min.js"></script>
 <script>
     function signInvoice() {
         // Lấy dữ liệu cần ký số từ trang
@@ -23,14 +27,19 @@
 
         // Tạo dữ liệu để ký số (ở đây, ví dụ sử dụng mã hóa SHA-256)
         var signatureData = recipientName + recipientAddress + invoiceId + creationDate + totalAmount;
-        // Gọi lớp tạo khóa để lấy cặp khóa
-        var key = getKeyPair();
-        var signature = key.signData(signatureData);
+        // Lấy khóa riêng tư từ JSP
+        var privateKey = "<%= privateKey %>";
+        // Sử dụng khóa riêng tư để ký số (mã hóa SHA-256)
+        var rsa = new RSAKey();
+        rsa.readPrivateKeyFromPEMString(privateKey);
+        var hSig = rsa.signString(signatureData, 'sha256');
 
-        console.log("Signature Data: " + signatureData);
-        console.log("Signature: " + signature);
-        // Gán chữ ký số vào trường hidden trong form
-        document.getElementById("signature").value = signature;
+        // Encode chữ ký dưới dạng chuỗi Base64
+        var signature = hSig.replace(/(.{64})/g, "$1\n");
+
+
+        // Gán chữ ký số vào trường  trong form
+        document.getElementById("signatureResult").innerText = "Chữ ký số: " + signature;
     }
 </script>
 <html lang="en">
@@ -140,6 +149,7 @@
             <button onclick="signInvoice()">Xác nhận và Ký số</button>
         </form>
         <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>
+
         <c:if test="${signatureAdded}">
             <p style="color: green;">Hóa đơn đã được ký số thành công!</p>
             <p>Chữ ký: ${sessionScope.signature}</p>
@@ -149,7 +159,7 @@
             %>
         </c:if>
         <c:if test="${not signatureAdded}">
-            <p style="color: red;">An xác nhận  de ký hóa đơn. </p>
+            <p style="color: red;">Ấn xác nhận để ký hóa đơn. </p>
         </c:if>
 
     </div>

@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -65,6 +66,20 @@ public class OrderControll extends HttpServlet {
         System.out.println("List of DetailInvoice from session: " + listde);
         System.out.println("List of products from session: " + listp);
 
+        // Tạo đối tượng RSAKeyGenerator và tạo khóa cặp
+        RSAKeyGenerator rsaKeyGenerator = null;
+        try {
+            rsaKeyGenerator = new RSAKeyGenerator();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            throw new ServletException("Failed to initialize RSAKeyGenerator", e);
+        }
+        rsaKeyGenerator.createKeys();
+// Lưu khóa công khai và khóa riêng tư vào session
+        String publicKey = rsaKeyGenerator.getPublicKey();
+        String privateKey = rsaKeyGenerator.getPrivateKey();
+        session.setAttribute("publicKey", publicKey);
+        session.setAttribute("privateKey", privateKey);
 
         // Gán thông báo thành công hoặc thất bại vào thuộc tính để hiển thị trên trang JSP
         session.setAttribute("signatureAdded", isSignatureValid);
@@ -72,7 +87,8 @@ public class OrderControll extends HttpServlet {
             session.setAttribute("signature", signature);
             System.out.println("Signature value: " + signature);
         }
-        // Tiếp tục xử lý khác nếu cần thiết
+
+        System.out.println("Signature value in doPost: " + request.getSession().getAttribute("signature"));
 
         // Chuyển hướng hoặc render lại trang JSP
         request.getRequestDispatcher("Bill.jsp").forward(request, response);

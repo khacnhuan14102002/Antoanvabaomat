@@ -91,5 +91,6 @@
     <orderEntry type="library" name="Maven: org.checkerframework:checker-compat-qual:2.5.5" level="project" />
     <orderEntry type="library" name="Maven: com.google.http-client:google-http-client-apache-v2:1.39.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.14" level="project" />
+    <orderEntry type="module" module-name="Web" />
   </component>
 </module>

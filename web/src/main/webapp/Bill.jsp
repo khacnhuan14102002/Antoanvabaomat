@@ -25,8 +25,19 @@
         var creationDate = "${invoice.datecreate}";
 
 
-        // Tạo dữ liệu để ký số (ở đây, ví dụ sử dụng mã hóa SHA-256)
-        var signatureData = recipientName + recipientAddress + invoiceId + creationDate + totalAmount;
+        if (invoiceId !== '' && totalAmount !== '' && recipientName !== '' && recipientAddress !== '' && creationDate !== '') {
+            // Các giá trị đã được lấy thành công, thực hiện các thao tác tiếp theo
+            var signatureData = recipientName + recipientAddress + invoiceId + creationDate + totalAmount;
+            // Tiếp tục xử lý chữ ký số...
+        } else {
+            // Hiển thị thông báo hoặc thực hiện các thao tác khác khi dữ liệu không hợp lệ
+            alert("Không thể lấy đủ thông tin để ký số.");
+        }
+        console.log("invoiceId: " + invoiceId);
+        console.log("totalAmount: " + totalAmount);
+        console.log("recipientName: " + recipientName);
+        console.log("recipientAddress: " + recipientAddress);
+        console.log("creationDate: " + creationDate);
         // Lấy khóa riêng tư từ JSP
         var privateKey = "<%= privateKey %>";
         // Sử dụng khóa riêng tư để ký số (mã hóa SHA-256)
@@ -150,17 +161,17 @@
         </form>
         <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>
 
-        <c:if test="${signatureAdded}">
-            <p style="color: green;">Hóa đơn đã được ký số thành công!</p>
-            <p>Chữ ký: ${sessionScope.signature}</p>
-            <%-- In giá trị chữ ký ra console --%>
-            <%
-                System.out.println("Signature value in JSP: " + session.getAttribute("signature"));
-            %>
-        </c:if>
-        <c:if test="${not signatureAdded}">
-            <p style="color: red;">Ấn xác nhận để ký hóa đơn. </p>
-        </c:if>
+<%--        <c:if test="${signatureAdded}">--%>
+<%--            <p style="color: green;">Hóa đơn đã được ký số thành công!</p>--%>
+<%--            <p>Chữ ký: ${sessionScope.signature}</p>--%>
+<%--            &lt;%&ndash; In giá trị chữ ký ra console &ndash;%&gt;--%>
+<%--            <%--%>
+<%--                System.out.println("Signature value in JSP: " + session.getAttribute("signature"));--%>
+<%--            %>--%>
+<%--        </c:if>--%>
+<%--        <c:if test="${not signatureAdded}">--%>
+<%--            <p style="color: red;">Ấn xác nhận để ký hóa đơn. </p>--%>
+<%--        </c:if>--%>
 
     </div>
 

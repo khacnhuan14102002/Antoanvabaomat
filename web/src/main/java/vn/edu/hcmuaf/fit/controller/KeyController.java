@@ -13,6 +13,7 @@ import vn.edu.hcmuaf.fit.service.*;
 @WebServlet(name = "KeyController", value = "/KeyController")
 public class KeyController extends HttpServlet {
 
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");

@@ -1,7 +1,12 @@
 <%@ page import="vn.edu.hcmuaf.fit.bean.products" %>
 <%@ page import="java.util.List" %>
 <%@ page import="vn.edu.hcmuaf.fit.bean.DetailInvoice" %>
-<%@ page import="java.util.ArrayList" %><%--
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.security.PrivateKey" %>
+<%@ page import="java.util.Base64" %>
+<%@ page import="java.security.KeyFactory" %>
+<%@ page import="java.security.spec.PKCS8EncodedKeySpec" %>
+<%--
   Created by IntelliJ IDEA.
   User: tranl
   Date: 12/4/2023
@@ -13,7 +18,13 @@
 <%
     // Lấy khóa riêng tư từ session
     String privateKey = (String) session.getAttribute("privateKey");
+    // Kiểm tra xem khóa riêng tư có tồn tại hay không trước khi mã hóa
+    String encodedPrivateKey = (privateKey != null) ? Base64.getEncoder().encodeToString(privateKey.getBytes()) : "";
 %>
+<script>
+    console.log("encodedPrivateKey in JavaScript: " + "<%= encodedPrivateKey %>");
+    console.log("privateKey from session: " + "<%= encodedPrivateKey %>");
+</script>
 <script src="https://kjur.github.io/jsrsasign/jsrsasign-latest-all-min.js"></script>
 <script>
     function signInvoice() {
@@ -38,19 +49,33 @@
         console.log("recipientName: " + recipientName);
         console.log("recipientAddress: " + recipientAddress);
         console.log("creationDate: " + creationDate);
-        // Lấy khóa riêng tư từ JSP
-        var privateKey = "<%= privateKey %>";
+        // Lấy khóa riêng tư
+     //   var publicKey = "${requestScope.publicKey}";
+        var privateKey = "${sessionScope.privateKey}";
+
+// Kiểm tra xem khóa riêng tư có tồn tại hay không
+        if (privateKey) {
+            // Thực hiện các thao tác ký số
+            try {
+            var rsa = new RSAKey();
+            rsa.readPrivateKeyFromPEMString(privateKey);
+            var hSig = rsa.signString(signatureData, 'sha256');
+
+            // Encode chữ ký dưới dạng chuỗi Base64
+            var signature = hSig.replace(/(.{64})/g, "$1\n");
+
+
+            // Gán chữ ký số vào trường  trong form
+            document.getElementById("signatureResult").innerText = "Chữ ký số: " + signature;
+            } catch (e) {
+                alert("Có lỗi xảy ra khi ký số: " + e.message);
+            }
+        } else {
+            alert("Không thể tìm thấy khóa riêng tư. Vui lòng thử lại.");
+        }
+
         // Sử dụng khóa riêng tư để ký số (mã hóa SHA-256)
-        var rsa = new RSAKey();
-        rsa.readPrivateKeyFromPEMString(privateKey);
-        var hSig = rsa.signString(signatureData, 'sha256');
 
-        // Encode chữ ký dưới dạng chuỗi Base64
-        var signature = hSig.replace(/(.{64})/g, "$1\n");
-
-
-        // Gán chữ ký số vào trường  trong form
-        document.getElementById("signatureResult").innerText = "Chữ ký số: " + signature;
     }
 </script>
 <html lang="en">
@@ -156,7 +181,7 @@
 
     <div class="total">
         <div class="signature-result" id="signatureResult"></div>
-        <form action="/order" method="post">
+        <form action="/Kydl" method="post">
             <button onclick="signInvoice()">Xác nhận và Ký số</button>
         </form>
         <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>

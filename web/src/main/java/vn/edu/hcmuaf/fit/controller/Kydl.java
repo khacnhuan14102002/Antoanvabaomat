@@ -17,101 +17,53 @@ public class Kydl extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        // Tạo đối tượng RSAKeyGenerator
-        RSAKeyGenerator rsaKeyGenerator = null;
-        try {
-            rsaKeyGenerator = new RSAKeyGenerator();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace(); // Ghi log
+        // Kiểm tra xem khóa đã được lưu trong session chưa
+        if (session.getAttribute("publicKey") == null || session.getAttribute("privateKey") == null) {
+            // Nếu chưa có khóa, tạo và lưu chúng
+            RSAKeyGenerator rsaKeyGenerator = null;
+            try {
+                rsaKeyGenerator = new RSAKeyGenerator();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                request.setAttribute("error", "Không thể tạo khóa RSA do lỗi hệ thống.");
+            }
 
-            // Hiển thị thông báo lỗi cho người dùng
-            request.setAttribute("error", "Không thể tạo khóa RSA do lỗi hệ thống.");
+            rsaKeyGenerator.createKeys();
+// Lấy chuỗi Base64 của khóa công khai và riêng tư
+            String publicKeyBefore = rsaKeyGenerator.getPublicKey();
+            String privateKeyBefore = rsaKeyGenerator.getPrivateKey();
+            System.out.println("Hello from your code!");
+            // Kiểm tra giá trị trước khi đặt vào session
+            System.out.println("publicKeyBefore: " + publicKeyBefore);
+            System.out.println("privateKeyBefore: " + privateKeyBefore);
+
+            // Đặt giá trị khóa vào session
+            session.setAttribute("publicKey", publicKeyBefore);
+            session.setAttribute("privateKey", privateKeyBefore);
         }
 
-        // Tạo cặp khóa
-        rsaKeyGenerator.createKeys();
-
-        // Lấy chuỗi Base64 của khóa công khai
-        String publicKey = rsaKeyGenerator.getPublicKey();
-
-        // Lấy chuỗi Base64 của khóa riêng tư
-        String privateKey = rsaKeyGenerator.getPrivateKey();
-
-        // Kiểm tra xem publicKey và privateKey có giá trị không trống
-
-        // Đặt giá trị khóa vào request để truyền đến JSP
-        session.setAttribute("publicKey", publicKey);
-        session.setAttribute("privateKey", privateKey);
-
-
-        // Forward đến trang JSP
+        // Chuyển hướng đến "Bill.jsp"
         RequestDispatcher dispatcher = request.getRequestDispatcher("Bill.jsp");
         dispatcher.forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-//        // Lấy chữ ký số từ request
-//        String signature = request.getParameter("signature");
-//
-        // Ví dụ: lấy dữ liệu từ form
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            // Lấy khóa từ session
+            String privateKey = (String) session.getAttribute("privateKey");
+            // Tiếp tục xử lý
+        }
+//       lấy dữ liệu từ form
         String signature = request.getParameter("signatureResult");
         // Ví dụ: in thông tin chữ ký ra console
         System.out.println("Chữ ký số: " + signature);
 
 
-//        // Thực hiện xác minh chữ ký số, lưu ý: cần có logic xác minh chữ ký thực tế ở đây
-//        boolean isSignatureValid = verifySignature(signature);
-//
-//        // Lấy thông tin hóa đơn và sản phẩm từ session hoặc request
-//        HttpSession session = request.getSession();
-//        Invoice invoice = (Invoice) session.getAttribute("invoice");
-//        List<DetailInvoice> listde = (List<DetailInvoice>) session.getAttribute("listde");
-//        List<products> listp = (List<products>) session.getAttribute("listp");
-//        // Set thông tin vào session để giữ lại sau khi ấn xác nhận
-//        session.setAttribute("invoice", invoice);
-//        session.setAttribute("listde", listde);
-//        session.setAttribute("listp", listp);
-//
-//        System.out.println("Invoice from session: " + invoice);
-//        System.out.println("List of DetailInvoice from session: " + listde);
-//        System.out.println("List of products from session: " + listp);
-//
-//        // Tạo đối tượng RSAKeyGenerator và tạo khóa cặp
-//        RSAKeyGenerator rsaKeyGenerator = null;
-//        try {
-//            rsaKeyGenerator = new RSAKeyGenerator();
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//            throw new ServletException("Failed to initialize RSAKeyGenerator", e);
-//        }
-//        rsaKeyGenerator.createKeys();
-//// Lưu khóa công khai và khóa riêng tư vào session
-//        String publicKey = rsaKeyGenerator.getPublicKey();
-//        String privateKey = rsaKeyGenerator.getPrivateKey();
-//        session.setAttribute("publicKey", publicKey);
-//        session.setAttribute("privateKey", privateKey);
-//
-//        // Gán thông báo thành công hoặc thất bại vào thuộc tính để hiển thị trên trang JSP
-//        session.setAttribute("signatureAdded", isSignatureValid);
-//        if (isSignatureValid) {
-//            session.setAttribute("signature", signature);
-//            System.out.println("Signature value: " + signature);
-//        }
-//
-//        System.out.println("Signature value in doPost: " + request.getSession().getAttribute("signature"));
-//
-//        // Chuyển hướng hoặc render lại trang JSP
         request.getRequestDispatcher("Bill.jsp").forward(request, response);
-//    }
-//
-//    private boolean verifySignature(String signature) {
-//        // Thực hiện xác minh chữ ký số ở đây, có thể cần sử dụng thư viện mã hóa chữ ký số
-//        // Trả về true nếu chữ ký hợp lệ, ngược lại trả về false
-//        // Ví dụ: sử dụng thư viện Bouncy Castle để xác minh chữ ký
-//        // Đây chỉ là một ví dụ giả định, bạn cần thay đổi để phản ánh thực tế của bạn.
-//        return true; // hoặc false nếu xác minh thất bại
-//    }
+
     }
+
+
 }

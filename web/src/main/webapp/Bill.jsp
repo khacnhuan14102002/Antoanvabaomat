@@ -18,8 +18,17 @@
 <%
     // Lấy khóa riêng tư từ session
     String privateKey = (String) session.getAttribute("privateKey");
+
+    if (privateKey != null) {
+        System.out.println("Private Key from Session in JSP: " + privateKey);
+        String encodedPrivateKey = Base64.getEncoder().encodeToString(privateKey.getBytes());
+        System.out.println("Encoded Private Key in JSP: " + encodedPrivateKey);
+    } else {
+        System.out.println("Private Key not found in Session.");
+    }
     // Kiểm tra xem khóa riêng tư có tồn tại hay không trước khi mã hóa
     String encodedPrivateKey = (privateKey != null) ? Base64.getEncoder().encodeToString(privateKey.getBytes()) : "";
+    System.out.println("Encoded Private Key: " + encodedPrivateKey);
 %>
 <script>
     console.log("encodedPrivateKey in JavaScript: " + "<%= encodedPrivateKey %>");

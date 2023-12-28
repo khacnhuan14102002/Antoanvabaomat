@@ -43,6 +43,8 @@ public class Kydl extends HttpServlet{
             session.setAttribute("publicKey", publicKeyBefore);
             session.setAttribute("privateKey", privateKeyBefore);
 
+
+
         }
 
         // Chuyển hướng đến "Bill.jsp"

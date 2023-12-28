@@ -21,18 +21,20 @@ public class Kydl extends HttpServlet{
         if (session.getAttribute("publicKey") == null || session.getAttribute("privateKey") == null) {
             // Nếu chưa có khóa, tạo và lưu chúng
             RSAKeyGenerator rsaKeyGenerator = null;
+
             try {
                 rsaKeyGenerator = new RSAKeyGenerator();
+                rsaKeyGenerator.createKeys();
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
                 request.setAttribute("error", "Không thể tạo khóa RSA do lỗi hệ thống.");
             }
 
-            rsaKeyGenerator.createKeys();
+
 // Lấy chuỗi Base64 của khóa công khai và riêng tư
             String publicKeyBefore = rsaKeyGenerator.getPublicKey();
             String privateKeyBefore = rsaKeyGenerator.getPrivateKey();
-            System.out.println("Hello from your code!");
+
             // Kiểm tra giá trị trước khi đặt vào session
             System.out.println("publicKeyBefore: " + publicKeyBefore);
             System.out.println("privateKeyBefore: " + privateKeyBefore);
@@ -40,6 +42,7 @@ public class Kydl extends HttpServlet{
             // Đặt giá trị khóa vào session
             session.setAttribute("publicKey", publicKeyBefore);
             session.setAttribute("privateKey", privateKeyBefore);
+
         }
 
         // Chuyển hướng đến "Bill.jsp"

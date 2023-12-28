@@ -15,78 +15,10 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8"  %>
-<%
-    // Lấy khóa riêng tư từ session
-    String privateKey = (String) session.getAttribute("privateKey");
 
-    if (privateKey != null) {
-        System.out.println("Private Key from Session in JSP: " + privateKey);
-        String encodedPrivateKey = Base64.getEncoder().encodeToString(privateKey.getBytes());
-        System.out.println("Encoded Private Key in JSP: " + encodedPrivateKey);
-    } else {
-        System.out.println("Private Key not found in Session.");
-    }
-    // Kiểm tra xem khóa riêng tư có tồn tại hay không trước khi mã hóa
-    String encodedPrivateKey = (privateKey != null) ? Base64.getEncoder().encodeToString(privateKey.getBytes()) : "";
-    System.out.println("Encoded Private Key: " + encodedPrivateKey);
-%>
-<script>
-    console.log("encodedPrivateKey in JavaScript: " + "<%= encodedPrivateKey %>");
-    console.log("privateKey from session: " + "<%= encodedPrivateKey %>");
-</script>
 <script src="https://kjur.github.io/jsrsasign/jsrsasign-latest-all-min.js"></script>
-<script>
-    function signInvoice() {
-        // Lấy dữ liệu cần ký số từ trang
-        var invoiceId = "${invoice.idIn}";
-        var totalAmount = "${invoice.getTotal()}";
-        var recipientName = "${sessionScope.invoice.nameuser}";
-        var recipientAddress = "${invoice.address}";
-        var creationDate = "${invoice.datecreate}";
 
 
-        if (invoiceId !== '' && totalAmount !== '' && recipientName !== '' && recipientAddress !== '' && creationDate !== '') {
-            // Các giá trị đã được lấy thành công, thực hiện các thao tác tiếp theo
-            var signatureData = recipientName + recipientAddress + invoiceId + creationDate + totalAmount;
-            // Tiếp tục xử lý chữ ký số...
-        } else {
-            // Hiển thị thông báo hoặc thực hiện các thao tác khác khi dữ liệu không hợp lệ
-            alert("Không thể lấy đủ thông tin để ký số.");
-        }
-        console.log("invoiceId: " + invoiceId);
-        console.log("totalAmount: " + totalAmount);
-        console.log("recipientName: " + recipientName);
-        console.log("recipientAddress: " + recipientAddress);
-        console.log("creationDate: " + creationDate);
-        // Lấy khóa riêng tư
-     //   var publicKey = "${requestScope.publicKey}";
-        var privateKey = "${sessionScope.privateKey}";
-
-// Kiểm tra xem khóa riêng tư có tồn tại hay không
-        if (privateKey) {
-            // Thực hiện các thao tác ký số
-            try {
-            var rsa = new RSAKey();
-            rsa.readPrivateKeyFromPEMString(privateKey);
-            var hSig = rsa.signString(signatureData, 'sha256');
-
-            // Encode chữ ký dưới dạng chuỗi Base64
-            var signature = hSig.replace(/(.{64})/g, "$1\n");
-
-
-            // Gán chữ ký số vào trường  trong form
-            document.getElementById("signatureResult").innerText = "Chữ ký số: " + signature;
-            } catch (e) {
-                alert("Có lỗi xảy ra khi ký số: " + e.message);
-            }
-        } else {
-            alert("Không thể tìm thấy khóa riêng tư. Vui lòng thử lại.");
-        }
-
-        // Sử dụng khóa riêng tư để ký số (mã hóa SHA-256)
-
-    }
-</script>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -139,6 +71,25 @@
     </style>
 </head>
 <body>
+<%
+    // Lấy khóa riêng tư từ session
+    String privateKey = (String) session.getAttribute("privateKey");
+
+    if (privateKey != null) {
+        System.out.println("Private Key from Session in JSP: " + privateKey);
+        String encodedPrivateKey = Base64.getEncoder().encodeToString(privateKey.getBytes());
+        System.out.println("Encoded Private Key in JSP: " + encodedPrivateKey);
+    } else {
+        System.out.println("Private Key not found in Session.");
+    }
+    // Kiểm tra xem khóa riêng tư có tồn tại hay không trước khi mã hóa
+    String encodedPrivateKey = (privateKey != null) ? Base64.getEncoder().encodeToString(privateKey.getBytes()) : "";
+    System.out.println("Encoded Private Key: " + encodedPrivateKey);
+%>
+<script>
+    console.log("encodedPrivateKey in JavaScript: " + "<%= encodedPrivateKey %>");
+    console.log("privateKey from session: " + "<%= encodedPrivateKey %>");
+</script>
 
 <div class="invoice-container">
     <div class="header">
@@ -180,6 +131,21 @@
             <td class=""><%= de.getPrice() %></td>
             <td class=""><%= de.getPrice() * de.getQuantity() %></td>
         </tr>
+        <!-- Truyền dữ liệu sang JavaScript -->
+        <script>
+            var productDetails = [];
+            var productDetail = {
+                name: "<%= ma.getNameProduct() %>",
+                quantity: <%= de.getQuantity() %>,
+                price: <%= de.getPrice() %>
+            };
+
+            if (typeof productDetails === 'undefined') {
+                var productDetails = []; // Khai báo nếu chưa tồn tại
+            }
+            productDetails.push(productDetail);
+            console.log("Added to productDetails:", productDetail);
+        </script>
         </tbody>
 
             <%    }
@@ -187,7 +153,70 @@
             }
             }%>
     </table>
+    <script>
 
+        function signInvoice() {
+            // Lấy dữ liệu cần ký số từ trang
+            var invoiceId = "${invoice.idIn}";
+            var totalAmount = "${invoice.getTotal()}";
+            var recipientName = "${sessionScope.invoice.nameuser}";
+            var recipientAddress = "${invoice.address}";
+            var creationDate = "${invoice.datecreate}";
+
+
+
+            if (invoiceId !== '' && totalAmount !== '' && recipientName !== '' && recipientAddress !== '' && creationDate !== '') {
+                // Các giá trị đã được lấy thành công, thực hiện các thao tác tiếp theo
+                var signatureData = recipientName + recipientAddress + invoiceId + creationDate + totalAmount;
+                //  Thêm thông tin sản phẩm vào dữ liệu ký số
+
+                for (var i = 0; i < productDetails.length; i++) {
+                    var product = productDetails[i];
+                    signatureData += product.name + product.quantity + product.price;
+                }
+
+                // kt dl
+                console.log("Dữ liệu cần ký số: " + signatureData);
+                //Tiếp tục xử lý chữ ký số...
+            } else {
+                // Hiển thị thông báo hoặc thực hiện các thao tác khác khi dữ liệu không hợp lệ
+                alert("Không thể lấy đủ thông tin để ký số.");
+            }
+            console.log("invoiceId: " + invoiceId);
+            console.log("totalAmount: " + totalAmount);
+            console.log("recipientName: " + recipientName);
+            console.log("recipientAddress: " + recipientAddress);
+            console.log("creationDate: " + creationDate);
+
+            // Lấy khóa riêng tư
+
+            var privateKey = "${sessionScope.privateKeyBefore}";
+
+// Kiểm tra xem khóa riêng tư có tồn tại hay không
+            if (privateKey) {
+                // Thực hiện các thao tác ký số
+                try {
+                    var rsa = new RSAKey();
+                    rsa.readPrivateKeyFromPEMString(privateKey);
+                    var hSig = rsa.signString(signatureData, 'sha256');
+
+                    // Encode chữ ký dưới dạng chuỗi Base64
+                    var signature = hSig.replace(/(.{64})/g, "$1\n");
+
+
+                    // Gán chữ ký số vào trường  trong form
+                    document.getElementById("signatureResult").innerText = "Chữ ký số: " + signature;
+                } catch (e) {
+                    alert("Có lỗi xảy ra khi ký số: " + e.message);
+                }
+            } else {
+                alert("Không thể tìm thấy khóa riêng tư. Vui lòng thử lại.");
+            }
+
+            // Sử dụng khóa riêng tư để ký số (mã hóa SHA-256)
+
+        }
+    </script>
     <div class="total">
         <div class="signature-result" id="signatureResult"></div>
         <form action="/Kydl" method="post">

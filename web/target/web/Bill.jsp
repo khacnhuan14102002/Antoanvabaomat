@@ -72,6 +72,7 @@
 </head>
 <body>
 <%
+
     // Lấy khóa riêng tư từ session
     String privateKeyBefore = (String) session.getAttribute("privateKey");
 
@@ -116,6 +117,7 @@
         <tbody>
         <tr>
             <%
+
                 List<DetailInvoice> listde = (List<DetailInvoice>) session.getAttribute("listde");
                 List<products> listp = (List<products>) session.getAttribute("listp");
                 if (listde != null && listp != null) {
@@ -130,18 +132,23 @@
         </tr>
         <!-- Truyền dữ liệu sang JavaScript -->
         <script>
-            var productDetails = [];
+            var productDetails = productDetails || [];
             var productDetail = {
                 name: "<%= ma.getNameProduct() %>",
                 quantity: <%= de.getQuantity() %>,
                 price: <%= de.getPrice() %>
             };
 
-            if (typeof productDetails === 'undefined') {
-                var productDetails = []; // Khai báo nếu chưa tồn tại
-            }
+
             productDetails.push(productDetail);
+
             console.log("Added to productDetails:", productDetail);
+
+            // Kiểm tra giá trị của biểu thức nhúng
+            console.log("Name:", "<%= ma.getNameProduct() %>");
+            console.log("Quantity:", <%= de.getQuantity() %>);
+            console.log("Price:", <%= de.getPrice() %>);
+
         </script>
         </tbody>
 
@@ -169,8 +176,17 @@
 
                 for (var i = 0; i < productDetails.length; i++) {
                     var product = productDetails[i];
-                    signatureData += product.name + product.quantity + product.price;
+                    signatureData += " " + product.name + " " + product.quantity + " " + product.price + " ";
+                    console.log("Added to signatureData:", product.name + " " + product.quantity + " " + product.price);
+
                 }
+                console.log("All products in productDetails:", JSON.stringify(productDetails, null, 2));
+
+                console.log("invoiceId: " + invoiceId);
+                console.log("totalAmount: " + totalAmount);
+                console.log("recipientName: " + recipientName);
+                console.log("recipientAddress: " + recipientAddress);
+                console.log("creationDate: " + creationDate);
 
                 // kt dl
                 console.log("Dữ liệu cần ký số: " + signatureData);
@@ -179,17 +195,12 @@
                 // Hiển thị thông báo hoặc thực hiện các thao tác khác khi dữ liệu không hợp lệ
                 alert("Không thể lấy đủ thông tin để ký số.");
             }
-            console.log("invoiceId: " + invoiceId);
-            console.log("totalAmount: " + totalAmount);
-            console.log("recipientName: " + recipientName);
-            console.log("recipientAddress: " + recipientAddress);
-            console.log("creationDate: " + creationDate);
 
             // Lấy khóa riêng tư
 
             var privateKey = "${sessionScope.privateKeyBefore}";
 
-// Kiểm tra xem khóa riêng tư có tồn tại hay không
+ //Kiểm tra xem khóa riêng tư có tồn tại hay không
             if (privateKey) {
                 // Thực hiện các thao tác ký số
                 try {
@@ -216,7 +227,7 @@
     </script>
     <div class="total">
         <div class="signature-result" id="signatureResult"></div>
-        <form action="/Kydl" method="post">
+        <form action="/kydl" method="post">
             <button onclick="signInvoice()">Xác nhận và Ký số</button>
         </form>
         <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>

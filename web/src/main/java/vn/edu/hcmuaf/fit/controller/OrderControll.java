@@ -41,6 +41,7 @@ public class OrderControll extends HttpServlet {
         session.setAttribute("listde", listde);
         session.setAttribute("listp", p);
         request.getRequestDispatcher("Bill.jsp").forward(request, response);
+        System.out.println("doGet method is called.");
     }
 
 }

@@ -1,45 +1,48 @@
 package vn.edu.hcmuaf.fit.controller;
 
+import java.io.PrintWriter;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 //import jdk.internal.org.jline.keymap.KeyMap;
 import vn.edu.hcmuaf.fit.bean.*;
 import vn.edu.hcmuaf.fit.service.*;
 
 @WebServlet(name = "KeyController", value = "/KeyController")
 public class KeyController extends HttpServlet {
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
         req.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
+        Date date = new Date();
+        Timestamp time = new Timestamp(date.getTime());
         User user = (User) session.getAttribute("user");
-
-        // Kiểm tra xem checkbox "Chưa có key" có được chọn hay không
-        String keyStatus = req.getParameter("fav_language");
-        boolean generateKey = keyStatus != null && keyStatus.equals("JavaScript");
-
-        // Create an instance of UserKey
-        Key userKey = new Key();
-
-        // Generate key pair nếu checkbox "Chưa có key" được chọn
-        KeyPair keyPair = generateKey ? userKey.createKey() : null;
-
-        if (generateKey && keyPair != null) {
-            // Nếu checkbox được chọn và đã tạo key pair, lưu key vào cơ sở dữ liệu
-            KeyService se = new KeyService();
-            String pub = userKey.convertPublicKeyToString(keyPair.getPublic());
-            String pri = userKey.convertPrivateKeyToString(keyPair.getPrivate());
-            se.addKey(user.getIdUser(), pub, pri);
-            session.setAttribute("userKeyPair", keyPair);
+        RSAKeyGenerator rsa;
+        try {
+            rsa = new RSAKeyGenerator();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
+        KeyService keyse = new KeyService();
+        KeyPair key = rsa.createKey();
+        String publicKey = rsa.convertPublicKeyToString(key.getPublic());
+        String priKey = rsa.convertPrivateKeyToString(key.getPrivate());
+        Key uk= new Key(user.getIdUser(),publicKey,null,time,0);
+        keyse.addKey(uk);session.setAttribute("priKey", priKey);
+        PrintWriter out = resp.getWriter();
+        out.print(priKey);  // Send only the private key string in the response
+        out.close();
+        System.out.println("private key " + priKey);
+        resp.sendRedirect("/successAccount");
 
-        // Forward to a JSP page to display the result or perform additional actions
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+    }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
     }
 }

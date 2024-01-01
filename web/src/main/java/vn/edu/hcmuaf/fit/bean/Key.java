@@ -1,51 +1,64 @@
 package vn.edu.hcmuaf.fit.bean;
-import java.security.*;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Base64;
+import com.google.api.client.util.DateTime;
+
+import java.sql.Timestamp;
 
 public class Key {
-    public KeyPair createKey() {
-    try {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(1024);
-        return keyPairGenerator.generateKeyPair();
-    } catch (NoSuchAlgorithmException e) {
-        e.printStackTrace();
-        return null;
+    private int idU;
+    private String pubkey;
+    private Timestamp reportdate;
+    private Timestamp addedDate;
+    private int isblock;
+
+    public Key(int idU, String pubkey, Timestamp reportdate, Timestamp addedDate,int isblock) {
+        this.idU = idU;
+        this.pubkey = pubkey;
+        this.reportdate = reportdate;
+        this.addedDate = addedDate;
+        this.isblock = isblock;
+    }
+
+    public int getIsblock() {
+        return isblock;
+    }
+
+    public void setIsblock(int isblock) {
+        this.isblock = isblock;
+    }
+
+    public int getIdU() {
+        return idU;
+    }
+
+    public void setIdU(int idU) {
+        this.idU = idU;
+    }
+
+    public String getPubkey() {
+        return pubkey;
+    }
+
+    public void setPubkey(String pubkey) {
+        this.pubkey = pubkey;
+    }
+
+
+
+    public void setReportdate(Timestamp reportdate) {
+        this.reportdate = reportdate;
+    }
+
+
+    public Timestamp getReportdate() {
+        return reportdate;
+    }
+
+    public Timestamp getAddedDate() {
+        return addedDate;
+    }
+
+    public void setAddedDate(Timestamp addedDate) {
+        this.addedDate = addedDate;
     }
 }
-    public static String convertPublicKeyToString(PublicKey publicKey) {
-        byte[] publicKeyBytes = publicKey.getEncoded();
-        return Base64.getEncoder().encodeToString(publicKeyBytes);
-    }
-    public static String convertPrivateKeyToString(PrivateKey privateKey) {
-        byte[] publicKeyBytes =privateKey.getEncoded();
-        return Base64.getEncoder().encodeToString(publicKeyBytes);
-    }
-    public String signData(String data, PrivateKey privateKey) {
-        try {
-            Signature signature = Signature.getInstance("SHA256withRSA");
-            signature.initSign(privateKey);
-            signature.update(data.getBytes());
-            byte[] signatureBytes = signature.sign();
-            return Base64.getEncoder().encodeToString(signatureBytes);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public boolean verifySignature(String data, String signature, PublicKey publicKey) {
-        try {
-            Signature sig = Signature.getInstance("SHA256withRSA");
-            sig.initVerify(publicKey);
-            sig.update(data.getBytes());
-            return sig.verify(Base64.getDecoder().decode(signature));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    }
 

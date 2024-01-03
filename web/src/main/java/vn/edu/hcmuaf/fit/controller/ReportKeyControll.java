@@ -18,21 +18,24 @@ public class ReportKeyControll extends HttpServlet {
 
     }
 
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         req.setCharacterEncoding("utf8");
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
 
-        Date date = new Date();
-        Timestamp time = new Timestamp(date.getTime());
+        // Retrieve date and time parameters from the request
+        String reportDate = req.getParameter("reportDate");
+        String reportTime = req.getParameter("reportTime");
 
+        // Combine date and time strings and convert to Timestamp
+        String dateTimeString = reportDate + " " + reportTime + ":00"; // Adding seconds part
+        Timestamp time = Timestamp.valueOf(dateTimeString);
 
         KeyService keys = new KeyService();
         String publicKey = keys.getPublic(user.getIdUser());
-        keys.reportKey(publicKey,time);
+        keys.reportKey(publicKey, time);
         response.sendRedirect("/successAccount");
-
     }
+
 }

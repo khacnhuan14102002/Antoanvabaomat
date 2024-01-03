@@ -122,7 +122,7 @@ public class Invoice {
 
     // Thêm phương thức để tạo và lưu chữ ký số
     public void signInvoice(PrivateKey privateKey, String dataToSign) {
-        this.signature = Key.signData(dataToSign, privateKey);
+        this.signature = RSAKeyGenerator.signData(dataToSign, privateKey);
     }
 
 

@@ -61,7 +61,11 @@
     <div id="baoCaoKeyForm" style="display: none;">
         <!-- Add your Báo cáo Key input form here -->
         <form id="reportKeyForm" action="reportkey" method="post">
-            <button class="btn btn-info" >Báo cáo</button>
+            <label for="reportDate">Ngày báo cáo:</label>
+            <input type="date" id="reportDate" name="reportDate" required>
+            <label for="reportTime">Giờ báo cáo:</label>
+            <input type="time" id="reportTime" name="reportTime" required>
+            <button class="btn btn-info">Báo cáo</button>
         </form>
     </div>
     <div id="taoKeyForm" style="display: none;">

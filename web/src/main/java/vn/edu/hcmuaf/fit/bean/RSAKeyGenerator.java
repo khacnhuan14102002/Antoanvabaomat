@@ -32,7 +32,7 @@ public class RSAKeyGenerator {
         byte[] publicKeyBytes =privateKey.getEncoded();
         return Base64.getEncoder().encodeToString(publicKeyBytes);
     }
-    public String signData(String data, PrivateKey privateKey) {
+    public static String signData(String data, PrivateKey privateKey) {
         try {
             Signature signature = Signature.getInstance("SHA256withRSA");
             signature.initSign(privateKey);

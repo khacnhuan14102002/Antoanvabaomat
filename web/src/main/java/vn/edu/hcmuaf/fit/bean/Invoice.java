@@ -1,6 +1,6 @@
 package vn.edu.hcmuaf.fit.bean;
 
-
+import java.security.PrivateKey;
 import java.sql.Timestamp;
 
 public class Invoice {
@@ -13,6 +13,8 @@ public class Invoice {
     private Timestamp datecreate;
     private String phone;
     private int IdUs;
+
+    private String signature;
 
     public Invoice() {
     }
@@ -40,6 +42,7 @@ public class Invoice {
         this.phone = phone;
         IdUs = idUs;
     }
+
 
     public int getIdIn() {
         return idIn;
@@ -112,6 +115,16 @@ public class Invoice {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    // Thêm phương thức để tạo và lưu chữ ký số
+    public void signInvoice(PrivateKey privateKey, String dataToSign) {
+        this.signature = Key.signData(dataToSign, privateKey);
+    }
+
 
     @Override
     public String toString() {

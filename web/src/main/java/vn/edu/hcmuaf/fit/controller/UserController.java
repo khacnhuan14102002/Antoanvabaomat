@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import vn.edu.hcmuaf.fit.dao.UserDao;
 import vn.edu.hcmuaf.fit.bean.User;
+import vn.edu.hcmuaf.fit.service.KeyService;
 
 @WebServlet(value = { "/user" })
 public class UserController extends HttpServlet{
@@ -24,6 +25,10 @@ public class UserController extends HttpServlet{
 		rd = req.getRequestDispatcher("/index");
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute("user");
+
+		// Use the correct attribute name when setting the key in the session
+
+
 		req.setAttribute("user", user);
 		rd.forward(req, resp);
 	}
@@ -48,7 +53,9 @@ public class UserController extends HttpServlet{
 		u.setIdUser(user.getIdUser());
 		userDao.updateUser(u);
 		User us = userDao.findUserByMaUser(user.getIdUser());
+
 		session.setAttribute("user", us);
+
 		resp.sendRedirect(req.getContextPath() + "/user");
 	}
 	

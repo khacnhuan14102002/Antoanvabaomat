@@ -111,10 +111,13 @@
     </table>
 
     <div class="total">
-        <form action="">
-            <button>Xác nhận</button>
-        </form>
+
         <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>
+        <form action="">
+            <p>Nhập private key</p>
+            <input class="text"  name="privatekey">
+        <button>Xác nhận</button>
+    </form>
     </div>
 
 </div>

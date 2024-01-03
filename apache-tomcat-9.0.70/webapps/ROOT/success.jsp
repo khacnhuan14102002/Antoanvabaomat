@@ -16,19 +16,6 @@
 
     <link rel="stylesheet" href="css/Success.css">
 </head>
-<head>
-    <title>Button Event with Key Generation Example</title>
-    <script>
-        function handleButtonClick(publicKey, privateKey) {
-            var popupWindow = window.open('', 'KeyInfoPopup', 'width=400,height=200');
-            popupWindow.document.write('<html><head><title>Key Information</title></head><body>');
-            popupWindow.document.write('<h2>Key Information</h2>');
-            popupWindow.document.write('<p>Public Key: ' + publicKey + '</p>');
-            popupWindow.document.write('<p>Private Key: ' + privateKey + '</p>');
-            popupWindow.document.write('</body></html>');
-        }
-    </script>
-</head>
 <body>
 <div class="col-sm-5 container">
     <form action="user" method="post">
@@ -38,16 +25,100 @@
         <label>email</label>
         <input name="email" type="text" class="form-control" value="${user.getEmailUs()}">
         <label>Password</label>
-        <input name="pass" type="text" class="form-control" value="${user.getPass()}">
+        <input name="pass" type="password" class="form-control" value="${user.getPass()}">
         <label>Số điện thoại</label>
         <input name="sdt" type="text" class="form-control" value="${user.getPhone()}">
-        <button class="btn btn-success">Cập nhật</button>
 
+        <%
+
+            String key = (String) request.getAttribute("key");
+            if(key != null) { %>
+        <label>Publickey</label>
+        <input name="pukey" type="text" class="form-control" value="<%= key %>">
+        <% } %>
+        <button class="btn btn-success" style="margin-left:90px">Cập nhật</button>
+        <div class="dropdown" style="margin-top:-54px;margin-left:90px">
+            <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">Key
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li><a href="#" onclick="showKeyForm('Nhập Key')">Nhập Key</a></li>
+                <li><a href="#" onclick="reportKey()">Báo cáo Key</a></li>
+                <li><a href="#" onclick="generateKey()">Tạo Key</a></li>
+            </ul>
+        </div>
     </form>
-<%--    <form action="KeyController" method="post">--%>
-        <button  action="KeyController" method="post" class="btn btn-success">key</button>
-<%--    </form>--%>
-</div>
 
-</body>
-</html>
+
+
+    <div id="keyForm" style="display: none;">
+        <!-- Add your key input form here -->
+        <form action="addkey" method="post">
+            <label>Nhập Key:</label>
+            <input name="key" type="text" class="form-control">
+            <button class="btn btn-success">Xác nhận</button>
+        </form>
+    </div>
+    <div id="baoCaoKeyForm" style="display: none;">
+        <!-- Add your Báo cáo Key input form here -->
+        <form id="reportKeyForm" action="reportkey" method="post">
+            <button class="btn btn-info" >Báo cáo</button>
+        </form>
+    </div>
+    <div id="taoKeyForm" style="display: none;">
+        <!-- Add your Tạo Key input form here -->
+        <form id="createKeyForm" action="KeyController" method="get">
+            <!-- Add fields for key generation if needed -->
+            <button class="btn btn-warning">Tạo Key</button>
+        </form>
+
+        <!-- Display private key here -->
+
+    </div>
+    <div id="privateKeyContainer" style="display: none;">
+        <!-- Display private key here -->
+        <p style="color: red">Vui lòng nhớ Private Key và không cho người khác biết</p>
+        <textarea id="privateKey" rows="4" cols="50"></textarea>
+    </div>
+
+    <script>
+        function hideAllForms() {
+            document.getElementById('keyForm').style.display = 'none';
+            document.getElementById('baoCaoKeyForm').style.display = 'none';
+            document.getElementById('taoKeyForm').style.display = 'none';
+        }
+
+        function showKeyForm(option) {
+            hideAllForms();
+            document.getElementById('keyForm').style.display = 'block';
+        }
+
+        function reportKey() {
+            hideAllForms();
+            document.getElementById('baoCaoKeyForm').style.display = 'block';
+        }
+
+        function generateKey() {
+            hideAllForms();
+            document.getElementById('taoKeyForm').style.display = 'block';
+        }
+
+
+        document.getElementById("createKeyForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/KeyController", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    var response = xhr.responseText;
+
+                    // Assuming the response is just the private key string
+                    var privateKeyTextarea = document.getElementById("privateKey");
+                    privateKeyTextarea.value = response;
+                    document.getElementById("privateKeyContainer").style.display = "block";
+                }
+            };
+            xhr.send();
+        });
+    </script>
+</div>

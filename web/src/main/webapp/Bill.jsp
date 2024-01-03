@@ -16,6 +16,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8"  %>
 
+<%@ page import="java.util.Objects" %>
+<%@ page import="java.util.Optional" %>
+
+
 <script src="https://kjur.github.io/jsrsasign/jsrsasign-latest-all-min.js"></script>
 
 
@@ -31,6 +35,14 @@
             margin: 0;
             padding: 0;
         }
+        .success-message {
+            background-color: #4CAF50; /* Màu xanh lá cây */
+            color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
 
         .invoice-container {
             width: 80%;
@@ -151,6 +163,7 @@
     <script>
 
         function signInvoice() {
+           // console.log("signInvoice() has been called");
             // Lấy dữ liệu cần ký số từ trang
             var invoiceId = "${invoice.idIn}";
             var totalAmount = "${invoice.getTotal()}";
@@ -162,7 +175,7 @@
 
             if (invoiceId !== '' && totalAmount !== '' && recipientName !== '' && recipientAddress !== '' && creationDate !== '') {
                 // Các giá trị đã được lấy thành công, thực hiện các thao tác tiếp theo
-                var signatureData = recipientName + recipientAddress + invoiceId + creationDate + totalAmount;
+                var signatureData = recipientName +" "+ recipientAddress +" " + invoiceId +" "+ creationDate +" "+ totalAmount;
                 //  Thêm thông tin sản phẩm vào dữ liệu ký số
 
                 for (var i = 0; i < productDetails.length; i++) {
@@ -182,16 +195,33 @@
                 // kt dl
                 console.log("Dữ liệu cần ký số: " + signatureData);
                 //Tiếp tục xử lý chữ ký số...
+                // Khởi tạo đối tượng XMLHttpRequest
+                var xhr = new XMLHttpRequest();
+
+                // Xác định hàm xử lý sự kiện khi trạng thái của yêu cầu thay đổi
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        // Xử lý phản hồi từ server ở đây
+                        console.log("Server Response:", xhr.responseText);
+                    } else if (xhr.readyState === 4 && xhr.status !== 200) {
+                        // Xử lý trạng thái không phải 200
+                        console.error("Server Error. Status:", xhr.status);
+                    }
+                };
+
+                // Mở kết nối và cấu hình yêu cầu
+                xhr.open("POST", "/kydl", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                // Gửi dữ liệu tới server
+                xhr.send("signatureData=" + encodeURIComponent(signatureData));
+
             } else {
                 // Hiển thị thông báo hoặc thực hiện các thao tác khác khi dữ liệu không hợp lệ
                 alert("Không thể lấy đủ thông tin để ký số.");
             }
             // ...
-            xhr.open("POST", "/kydl", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-// Gửi dữ liệu tới server, "
-            xhr.send("signatureData=" + encodeURIComponent(signatureData));
 
 
 
@@ -200,24 +230,15 @@
     <div class="total">
         <div class="signature-result" id="signatureResult"></div>
         <form action="/kydl" method="post">
-            <button onclick="signInvoice()">Xác nhận và Ký số</button>
+            <button type="button" onclick="signInvoice()">Xác nhận và Ký số</button>
         </form>
         <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>
 
-        <%--        <c:if test="${signatureAdded}">--%>
-        <%--            <p style="color: green;">Hóa đơn đã được ký số thành công!</p>--%>
-        <%--            <p>Chữ ký: ${sessionScope.signature}</p>--%>
-        <%--            &lt;%&ndash; In giá trị chữ ký ra console &ndash;%&gt;--%>
-        <%--            <%--%>
-        <%--                System.out.println("Signature value in JSP: " + session.getAttribute("signature"));--%>
-        <%--            %>--%>
-        <%--        </c:if>--%>
-        <%--        <c:if test="${not signatureAdded}">--%>
-        <%--            <p style="color: red;">Ấn xác nhận để ký hóa đơn. </p>--%>
-        <%--        </c:if>--%>
-
     </div>
-
+    <c:if test="${not empty sessionScope.successMessage}">
+        <div class="success-message">${sessionScope.successMessage}</div>
+        <% session.removeAttribute("successMessage"); %>
+    </c:if>
 
 </div>
 

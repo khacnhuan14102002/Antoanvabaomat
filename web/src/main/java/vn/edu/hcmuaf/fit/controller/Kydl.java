@@ -16,52 +16,48 @@ import vn.edu.hcmuaf.fit.service.*;
 public class Kydl extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        HttpSession session = request.getSession();
-//        // Kiểm tra xem khóa đã được lưu trong session chưa
-//
-//            // Nếu chưa có khóa, tạo và lưu chúng
-//            RSAKeyGenerator rsaKeyGenerator = null;
-//
-//            try {
-//                rsaKeyGenerator = new RSAKeyGenerator();
-//                rsaKeyGenerator.createKeys();
-//            } catch (NoSuchAlgorithmException e) {
-//                e.printStackTrace();
-//                request.setAttribute("error", "Không thể tạo khóa RSA do lỗi hệ thống.");
-//            }
-//
-//
-//// Lấy chuỗi Base64 của khóa công khai và riêng tư
-//            String publicKeyBefore = rsaKeyGenerator.getPublicKey();
-//            String privateKeyBefore = rsaKeyGenerator.getPrivateKey();
-//
-//            // Kiểm tra giá trị trước khi đặt vào session
-//            System.out.println("publicKeyBefore: " + publicKeyBefore);
-//            System.out.println("privateKeyBefore: " + privateKeyBefore);
-//
-//
-//
-//        // Chuyển hướng đến "Bill.jsp"
-//        RequestDispatcher dispatcher = request.getRequestDispatcher("Bill.jsp");
-//        dispatcher.forward(request, response);
+
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            // Lấy khóa từ session
+            // Lấy private key từ session
             String privateKey = (String) session.getAttribute("privateKey");
-            // Tiếp tục xử lý
+
+            // Lấy dữ liệu từ form
+            String signatureData = request.getParameter("signatureData");
+            System.out.println("dl ký số: " + signatureData);
+            // Kiểm tra xem chữ ký có tồn tại và không rỗng
+            if (privateKey != null && !privateKey.isEmpty() && signatureData != null) {
+                try {
+                    // Sử dụng private key để ký dữ liệu
+                    String signature = signatureData(signatureData, privateKey);
+
+                    // Tiếp tục xử lý hoặc gửi chữ ký về client nếu cần
+                    System.out.println("Chữ ký số: " + signature);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // Xử lý nếu có lỗi xảy ra trong quá trình ký
+                }
+            } else {
+                // Xử lý khi private key hoặc dữ liệu không hợp lệ
+                System.out.println("Private Key hoặc dữ liệu không hợp lệ");
+            }
+        } else {
+            // Xử lý khi session không tồn tại (người dùng chưa đăng nhập)
+            System.out.println("Người dùng chưa đăng nhập");
         }
-//       lấy dữ liệu từ form
-        String signature = request.getParameter("signatureResult");
-        // Ví dụ: in thông tin chữ ký ra console
-        System.out.println("Chữ ký số: " + signature);
 
 
         request.getRequestDispatcher("Bill.jsp").forward(request, response);
 
+    }
+
+    private String signatureData(String signatureData, String privateKey) {
+
+        return signatureData;
     }
 
 

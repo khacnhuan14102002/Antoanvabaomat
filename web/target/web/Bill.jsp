@@ -71,22 +71,13 @@
     </style>
 </head>
 <body>
-<%
+<%--<%--%>
 
-    // Lấy khóa riêng tư từ session
-    String privateKeyBefore = (String) session.getAttribute("privateKey");
+<%--    // Lấy khóa riêng tư từ session--%>
+<%--    String privateKey = (String) session.getAttribute("priKey");--%>
 
-    if (privateKeyBefore != null) {
-        System.out.println("Private Key from Session in JSP: " + privateKeyBefore);
-        String encodedPrivateKey = Base64.getEncoder().encodeToString(privateKeyBefore.getBytes());
-        System.out.println("Encoded Private Key in JSP: " + encodedPrivateKey);
-    } else {
-        System.out.println("Private Key not found in Session.");
-    }
-    // Kiểm tra xem khóa riêng tư có tồn tại hay không trước khi mã hóa
-    String encodedPrivateKey = (privateKeyBefore != null) ? Base64.getEncoder().encodeToString(privateKeyBefore.getBytes()) : "";
-    System.out.println("Encoded Private Key: " + encodedPrivateKey);
-%>
+<%--    System.out.println("Private Key: " + privateKey);--%>
+<%--%>--%>
 
 
 <div class="invoice-container">
@@ -121,9 +112,9 @@
                 List<DetailInvoice> listde = (List<DetailInvoice>) session.getAttribute("listde");
                 List<products> listp = (List<products>) session.getAttribute("listp");
                 if (listde != null && listp != null) {
-                for (DetailInvoice de : listde) {
-                    for (products ma : listp) {
-                        if (de.getIdpro() == ma.getIdProduct()) {
+                    for (DetailInvoice de : listde) {
+                        for (products ma : listp) {
+                            if (de.getIdpro() == ma.getIdProduct()) {
             %>
             <td class=""><%= ma.getNameProduct() %></td>
             <td class=""><%= de.getQuantity() %></td>
@@ -152,10 +143,10 @@
         </script>
         </tbody>
 
-            <%    }
-            }
-            }
-            }%>
+        <%    }
+        }
+        }
+        }%>
     </table>
     <script>
 
@@ -195,33 +186,14 @@
                 // Hiển thị thông báo hoặc thực hiện các thao tác khác khi dữ liệu không hợp lệ
                 alert("Không thể lấy đủ thông tin để ký số.");
             }
+            // ...
+            xhr.open("POST", "/kydl", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-            // Lấy khóa riêng tư
-
-            var privateKey = "${sessionScope.privateKeyBefore}";
-
- //Kiểm tra xem khóa riêng tư có tồn tại hay không
-            if (privateKey) {
-                // Thực hiện các thao tác ký số
-                try {
-                    var rsa = new RSAKey();
-                    rsa.readPrivateKeyFromPEMString(privateKey);
-                    var hSig = rsa.signString(signatureData, 'sha256');
-
-                    // Encode chữ ký dưới dạng chuỗi Base64
-                    var signature = hSig.replace(/(.{64})/g, "$1\n");
+// Gửi dữ liệu tới server, "
+            xhr.send("signatureData=" + encodeURIComponent(signatureData));
 
 
-                    // Gán chữ ký số vào trường  trong form
-                    document.getElementById("signatureResult").innerText = "Chữ ký số: " + signature;
-                } catch (e) {
-                    alert("Có lỗi xảy ra khi ký số: " + e.message);
-                }
-            } else {
-                alert("Không thể tìm thấy khóa riêng tư. Vui lòng thử lại.");
-            }
-
-            // Sử dụng khóa riêng tư để ký số (mã hóa SHA-256)
 
         }
     </script>
@@ -232,17 +204,17 @@
         </form>
         <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>
 
-<%--        <c:if test="${signatureAdded}">--%>
-<%--            <p style="color: green;">Hóa đơn đã được ký số thành công!</p>--%>
-<%--            <p>Chữ ký: ${sessionScope.signature}</p>--%>
-<%--            &lt;%&ndash; In giá trị chữ ký ra console &ndash;%&gt;--%>
-<%--            <%--%>
-<%--                System.out.println("Signature value in JSP: " + session.getAttribute("signature"));--%>
-<%--            %>--%>
-<%--        </c:if>--%>
-<%--        <c:if test="${not signatureAdded}">--%>
-<%--            <p style="color: red;">Ấn xác nhận để ký hóa đơn. </p>--%>
-<%--        </c:if>--%>
+        <%--        <c:if test="${signatureAdded}">--%>
+        <%--            <p style="color: green;">Hóa đơn đã được ký số thành công!</p>--%>
+        <%--            <p>Chữ ký: ${sessionScope.signature}</p>--%>
+        <%--            &lt;%&ndash; In giá trị chữ ký ra console &ndash;%&gt;--%>
+        <%--            <%--%>
+        <%--                System.out.println("Signature value in JSP: " + session.getAttribute("signature"));--%>
+        <%--            %>--%>
+        <%--        </c:if>--%>
+        <%--        <c:if test="${not signatureAdded}">--%>
+        <%--            <p style="color: red;">Ấn xác nhận để ký hóa đơn. </p>--%>
+        <%--        </c:if>--%>
 
     </div>
 

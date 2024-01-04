@@ -9,7 +9,9 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @WebServlet(name = "addkey", value = "/addkey")
 public class AddkeyControll extends HttpServlet {
@@ -25,12 +27,24 @@ public class AddkeyControll extends HttpServlet {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         String publicKey = req.getParameter("key");
+        String idUser = req.getParameter("idUser");
+
         Date date = new Date();
         Timestamp time = new Timestamp(date.getTime());
         Key key = new Key(user.getIdUser(),publicKey,null,time,0);
 
         KeyService keys = new KeyService();
+        List<Key> keyOld= new ArrayList<>();
+        keyOld = keys.getListKeyByIdUser(Integer.parseInt(idUser));
+        for (Key k : keyOld) {
+            keys.updateOldKey(k.getPubkey());
+
+        }
         keys.addKey(key);
         response.sendRedirect("/successAccount");
+    }
+
+    public static void main(String[] args) {
+
     }
 }

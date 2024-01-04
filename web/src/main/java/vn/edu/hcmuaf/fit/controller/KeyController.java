@@ -7,6 +7,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.sql.Timestamp;
 import java.util.Date;
 //import jdk.internal.org.jline.keymap.KeyMap;
@@ -23,26 +25,47 @@ public class KeyController extends HttpServlet {
         Timestamp time = new Timestamp(date.getTime());
         User user = (User) session.getAttribute("user");
         RSAKeyGenerator rsa;
+        rsa = new RSAKeyGenerator();
+        KeyService keyse = new KeyService();
+        KeyPair key = null;
         try {
-            rsa = new RSAKeyGenerator();
+            key = rsa.genKeyPair();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        KeyService keyse = new KeyService();
-        KeyPair key = rsa.createKey();
-        String publicKey = rsa.convertPublicKeyToString(key.getPublic());
-        String priKey = rsa.convertPrivateKeyToString(key.getPrivate());
-        Key uk= new Key(user.getIdUser(),publicKey,null,time,0);
-        keyse.addKey(uk);session.setAttribute("priKey", priKey);
+        PublicKey publicKey = rsa.genPublicKey(key);
+        PrivateKey priKey = rsa.genPrivateKey(key);
+        String pri = rsa.privateKeyToString(priKey);
+        String publicString = rsa.publicKeyToString(publicKey);
+        Key uk= new Key(user.getIdUser(),publicString,null,time,0);
+        keyse.addKey(uk);
+        session.setAttribute("priKey", pri);
+
         PrintWriter out = resp.getWriter();
-        out.print(priKey);  // Send only the private key string in the response
+        out.print(pri);  // Send only the private key string in the response
         out.close();
-        System.out.println("private key " + priKey);
+//        System.out.println("private key " + priKey);
         resp.sendRedirect("/successAccount");
 
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+    }
+
+    public static void main(String[] args) {
+        KeyPair key = null;
+        RSAKeyGenerator rsa;
+        rsa = new RSAKeyGenerator();
+        try {
+            key = rsa.genKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        PublicKey publicKey = rsa.genPublicKey(key);
+        PrivateKey priKey = rsa.genPrivateKey(key);
+        String pri = rsa.privateKeyToString(priKey);
+        String publicString = rsa.publicKeyToString(publicKey);
+        System.out.println(pri);
     }
 }

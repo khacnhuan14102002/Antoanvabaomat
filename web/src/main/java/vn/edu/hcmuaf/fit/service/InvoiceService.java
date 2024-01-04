@@ -15,27 +15,27 @@ public class InvoiceService {
     static Connection conn = null;
     static PreparedStatement ps = null;
     static ResultSet rs = null;
-    public int addInvoice(Invoice invoice){
-        String query = "INSERT INTO invoices ( NameUs, Address, PayType, StatusIn, Total, ExportDate, Phone, IdUs) VALUES (?,?,?,?,?,?,?,?)";
+    public int addInvoice(Invoice invoice, String cipherText) {
+        String query = "INSERT INTO invoices (NameUs, Address, PayType, StatusIn, Total, ExportDate, Phone, IdUs, CipherText) VALUES (?,?,?,?,?,?,?,?,?)";
         int IdIn = 0;
         try {
             conn = new connect().getconConnection();
             ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-//            ps.setInt(1, invoice.getIdIn());
             ps.setString(1, invoice.getNameuser());
             ps.setString(2, invoice.getAddress());
             ps.setString(3, invoice.getType());
             ps.setString(4, invoice.getStatusIn());
             ps.setDouble(5, invoice.getTotal());
             ps.setTimestamp(6, invoice.getDatecreate());
-            ps.setString(7,invoice.getPhone());
-            ps.setInt(8,invoice.getIdUs());
+            ps.setString(7, invoice.getPhone());
+            ps.setInt(8, invoice.getIdUs());
+            ps.setString(9, cipherText); // Thêm giá trị cipherText vào câu lệnh PreparedStatement
             ps.executeUpdate();
-            try(ResultSet rs = ps.getGeneratedKeys() ){
-                if(rs.next()){
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
                     IdIn = rs.getInt(1);
                 }
-                rs.close();
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -43,6 +43,7 @@ public class InvoiceService {
         }
         return IdIn;
     }
+
     public ArrayList<Invoice> getAllIn(int id){
         ArrayList<Invoice> list = new ArrayList<>();
         String query="select * from invoices where IdUs = ?";
@@ -129,10 +130,10 @@ public class InvoiceService {
 
 
     public static void main(String[] args) {
-    InvoiceService in = new InvoiceService();
-    System.out.println(in.getAllIn(3));
-    //System.out.println(in.getAllInbyMonth("2023-05-01 00:00:00","2023-05-31 23:59:59"));
+        InvoiceService in = new InvoiceService();
+        System.out.println(in.getAllIn(3));
+        //System.out.println(in.getAllInbyMonth("2023-05-01 00:00:00","2023-05-31 23:59:59"));
 
 
-}
     }
+}

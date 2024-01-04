@@ -22,6 +22,40 @@
 </head>
 <body>
 <header>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        /* Style cho modal */
+        .modal {
+            display: none; /* Ẩn modal khi ban đầu */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Style cho nền modal */
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        /* Style cho input và button */
+        input, button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+    </style>
     <div id="top-header">
         <div class="container">
             <ul class="header-links pull-left">
@@ -211,13 +245,13 @@
                             <div><strong class="order-total">${total}</strong></div>
                         </div>
                     </div>
-<%--                    <% String option = request.getParameter("type"); %>--%>
-<%--                    <% if (option.equals("Chuyển khoản")) { %>--%>
-<%--                    <p>Bạn đã chọn "Có". Đang chuyển hướng...</p>--%>
-<%--                    <%--%>
-<%--                        // Chuyển hướng sang trang khác nếu cần thiết--%>
-<%--                        response.sendRedirect("ck.jsp");--%>
-<%--                   %>--%>
+                    <%--                    <% String option = request.getParameter("type"); %>--%>
+                    <%--                    <% if (option.equals("Chuyển khoản")) { %>--%>
+                    <%--                    <p>Bạn đã chọn "Có". Đang chuyển hướng...</p>--%>
+                    <%--                    <%--%>
+                    <%--                        // Chuyển hướng sang trang khác nếu cần thiết--%>
+                    <%--                        response.sendRedirect("ck.jsp");--%>
+                    <%--                   %>--%>
                     <div class="payment-method">
                         <h3>Phương thức thanh toán</h3>
                         <select name="type">
@@ -228,9 +262,19 @@
                     <div class="input-checkbox">
                         <input type="checkbox" id="terms">
                     </div>
-                    <button type="submit">Thanh toán</button>
+                    <a style="border: #0f0f0f" onclick="openModal()">Thanh toan</a>
+
                 </div>
             </div>
+        </div>
+    </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <label for="keyInput">Nhập Key:</label>
+            <textarea type="text" id="keyInput" name ="keyInput" rows="10"></textarea>
+            <br>
+            <button type = "submit">Xác Nhận</button>
+            <a onclick="closeModal()">Quay Về</a>
         </div>
     </div>
 </form>
@@ -342,6 +386,37 @@
 <%--<script src="js/jquery.zoom.min.js"></script>--%>
 <script src="js/checkout.js"></script>
 <%--<script src="js/main.js"></script>--%>
+<script>
+    // Lấy modal và input
+    var modal = document.getElementById("myModal");
+    var keyInput = document.getElementById("keyInput");
+
+    // Mở modal
+    function openModal() {
+        modal.style.display = "flex";
+    }
+
+    // Đóng modal
+    function closeModal() {
+        modal.style.display = "none";
+    }
+
+    // Xác nhận hành động
+    // function confirmAction() {
+    //     var enteredKey = keyInput.value;
+    //     // Xử lý hành động khi xác nhận (ví dụ: gửi key lên server)
+    //     console.log("Đã nhập key:", enteredKey);
+    //     // Đóng modal sau khi xử lý
+    //     closeModal();
+    // }
+
+    // Đóng modal khi click ra ngoài nó
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+</script>
 
 </body>
 </html>

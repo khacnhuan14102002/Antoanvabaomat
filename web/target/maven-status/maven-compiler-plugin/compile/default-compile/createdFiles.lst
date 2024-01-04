@@ -13,7 +13,7 @@ vn\edu\hcmuaf\fit\controller\SuccessControll.class
 vn\edu\hcmuaf\fit\controller\XuathoadontuychonControll.class
 vn\edu\hcmuaf\fit\controller\LoginServlet.class
 vn\edu\hcmuaf\fit\controller\InvoiceControll.class
-vn\edu\hcmuaf\fit\controller\RegisServlet$1.class
+vn\edu\hcmuaf\fit\controller\Kydl.class
 vn\edu\hcmuaf\fit\controller\UserController.class
 vn\edu\hcmuaf\fit\controller\To34Controll.class
 vn\edu\hcmuaf\fit\db\DBProperties.class
@@ -24,7 +24,6 @@ vn\edu\hcmuaf\fit\controller\SanphamthangControll.class
 vn\edu\hcmuaf\fit\service\KeyService.class
 vn\edu\hcmuaf\fit\controller\AddUserServlet.class
 vn\edu\hcmuaf\fit\controller\EditUsControll.class
-vn\edu\hcmuaf\fit\controller\ForgetPass$1.class
 vn\edu\hcmuaf\fit\controller\PageCotroll.class
 vn\edu\hcmuaf\fit\controller\deleteUser.class
 vn\edu\hcmuaf\fit\controller\EditroleControll.class
@@ -56,19 +55,19 @@ vn\edu\hcmuaf\fit\controller\StoreCat.class
 vn\edu\hcmuaf\fit\service\LoaiService.class
 vn\edu\hcmuaf\fit\controller\ManageControl.class
 vn\edu\hcmuaf\fit\controller\EditProduct.class
-vn\edu\hcmuaf\fit\controller\KeyController.class
 vn\edu\hcmuaf\fit\controller\updateCartControll.class
 vn\edu\hcmuaf\fit\bean\DetailInvoice.class
 vn\edu\hcmuaf\fit\controller\OrderControll.class
+vn\edu\hcmuaf\fit\controller\AddkeyControll.class
 vn\edu\hcmuaf\fit\bean\GoogleUtils.class
 vn\edu\hcmuaf\fit\controller\AddroleCOntroll.class
 vn\edu\hcmuaf\fit\controller\To12Controll.class
 vn\edu\hcmuaf\fit\bean\Review.class
-vn\edu\hcmuaf\fit\service\MailService.class
 vn\edu\hcmuaf\fit\bean\products.class
 vn\edu\hcmuaf\fit\controller\EditCatalog.class
 vn\edu\hcmuaf\fit\service\SQLException.class
 vn\edu\hcmuaf\fit\controller\search.class
+vn\edu\hcmuaf\fit\controller\ReportKeyControll.class
 vn\edu\hcmuaf\fit\controller\HistoryInvoiceControll.class
 vn\edu\hcmuaf\fit\controller\XuatexcelthangControll.class
 vn\edu\hcmuaf\fit\bean\Soluongbanra.class
@@ -85,7 +84,6 @@ vn\edu\hcmuaf\fit\service\SoluongService.class
 vn\edu\hcmuaf\fit\controller\AddControl.class
 vn\edu\hcmuaf\fit\bean\Key.class
 vn\edu\hcmuaf\fit\service\RoleService.class
-vn\edu\hcmuaf\fit\service\MailService$1.class
 vn\edu\hcmuaf\fit\controller\AtoZControll.class
 vn\edu\hcmuaf\fit\controller\AdminControll.class
 vn\edu\hcmuaf\fit\controller\StoreSort.class

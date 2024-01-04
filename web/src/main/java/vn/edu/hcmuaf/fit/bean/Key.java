@@ -18,6 +18,9 @@ public class Key {
         this.isblock = isblock;
     }
 
+    public Key() {
+    }
+
     public int getIsblock() {
         return isblock;
     }
@@ -59,6 +62,9 @@ public class Key {
 
     public void setAddedDate(Timestamp addedDate) {
         this.addedDate = addedDate;
+    }
+    public boolean isPrivateKeySecure(Timestamp invoiceDate,Timestamp report) {
+               return invoiceDate.after(report) && isblock == 0;
     }
 }
 

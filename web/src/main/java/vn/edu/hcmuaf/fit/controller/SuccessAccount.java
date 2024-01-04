@@ -17,6 +17,7 @@ public class SuccessAccount extends HttpServlet {
         User user = (User) session.getAttribute("user");
         KeyService keyService = new KeyService();
         String key = keyService.getPublic(user.getIdUser());
+
         req.setAttribute("key", key);
         req.getRequestDispatcher("success.jsp").forward(req,response);
     }

@@ -43,7 +43,7 @@ public class KeyService {
         }
     }
     public static String getPublic(int id) {
-        String query = "select PublicKey from userkeys where UserId= ?";
+        String query = "SELECT PublicKey  FROM userkeys  WHERE UserId = ? AND isblock = 0  ORDER BY DayCreate DESC  LIMIT 1";
         try {
             conn = new connect().getconConnection();
             ps = conn.prepareStatement(query);
@@ -87,6 +87,22 @@ public class KeyService {
             System.out.println("fail");
         }
     }
+    public Timestamp getTime(int idU){
+        String query = "SELECT ReportDate FROM userkeys WHERE  UserId = ?  ORDER BY DayCreate DESC  LIMIT 1;";
+        try {
+            conn = new connect().getconConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1,idU);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Timestamp time= rs.getTimestamp(1);
+                return time;
+
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
     public List<Key> getListKeyByIdUser(int idUser) {
         List<Key> listKey = new ArrayList<>();
         String query = "SELECT UserId, PublicKey, ReportDate, DayCreate, isblock FROM userkeys WHERE UserId = ?";
@@ -113,6 +129,24 @@ public class KeyService {
         }
         return listKey;
     }
+    public static String getOldPublicKeyFromDatabase(int id) {
+        String query = "SELECT PublicKey FROM userkeys WHERE UserId = ? AND isblock = 0 ORDER BY daycreate DESC LIMIT 1";
+        String oldPublicKey = null;
+        try {
+            conn = new connect().getconConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1,id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                String publicKey = rs.getString(1);
+                System.out.println("Public Key from Database: " + publicKey);
+                return publicKey;
+
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
 
     public static void main(String[] args) throws NoSuchAlgorithmException {
 //        Date date = new Date();
@@ -120,8 +154,9 @@ public class KeyService {
 ////        KeyService kyes = new KeyService();
 ////        kyes.reportKey("asdaxacscascaczx", time);
         KeyService keyService = new KeyService();
-
-        Key key = new Key(16, "hrruuurrrrrrrrrrrrrrrrrrrrrrrrr",null,null,0);
+     //t   keyService.reportKey("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkXsyD4BPk4kJRs6OVvWkiit+37aprjSMyKAIwH5/FdESrmFkgjeV4wjgHc9pi4coEfxnLqbUniw2XgowMltY4ZiIMwjG0qIhgJagLuaONGs31BNsLYiQWTWSm+e8sPZhS4r1cKr/QJquka7JvG20QLTfbVGtTtiNQczqs3ZaX0k9P+WmzjJXIJeo81LMhMoKpD8v+BTUSuYdchAJtB/LlorSLRVASXYq+sFIu9iYwgNDXPBTYR/a9Vu2BKBKrPQsNNyY1/t5uay7+NVKCc1KrDn+QSmIZssv6r/61+wl/FbQDKjRf/bojUbu9pi3c3pyr3ns6Nb2MIBe909rD12mfQIDAQAB",time);
+//
+//        Key key = new Key(16, "hrruuurrrrrrrrrrrrrrrrrrrrrrrrr",null,null,0);
 
 
 //        KeyPair keyPair = new RSAKeyGenerator().createKey();
@@ -138,16 +173,16 @@ public class KeyService {
 //        // In thông tin key
 //        System.out.println("Public Key: " + publicKeyString);
 //        System.out.println("Private Key: " + privateKeyString);
-        System.out.println(getPublic(16));
-        List<Key> keys= new ArrayList<>();
-        keys = keyService.getListKeyByIdUser(16);
-        for (Key k: keys) {
-            keyService.updateOldKey(k.getPubkey());
-            System.out.println(k.getPubkey());
-
-        }
-
-        keyService.addKey(key);
+        System.out.println(keyService.getTime(3));
+//        List<Key> keys= new ArrayList<>();
+//        keys = keyService.getListKeyByIdUser(16);
+//        for (Key k: keys) {
+//            keyService.updateOldKey(k.getPubkey());
+//            System.out.println(k.getPubkey());
+//
+//        }
+//
+//        keyService.addKey(key);
     }
 
 }

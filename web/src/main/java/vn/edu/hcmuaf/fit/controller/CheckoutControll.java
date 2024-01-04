@@ -51,23 +51,33 @@ public class CheckoutControll extends HttpServlet {
 
         }
         Date date = new Date();
-
+        RSAKeyGenerator rsa = new RSAKeyGenerator();
         Invoice invoice = new Invoice(name, diachi, phuonthucthanhtoan, "null", total, new Timestamp(new Date().getTime()), phone,idus);
+        String cipher = rsa.hashObject(invoice);
+        String priakey = request.getParameter("keyInput");
+        try {
+            String cipherText = rsa.encrypt(cipher,rsa.getPrivateKeyFromString(priakey));
+            int Invoieid = ins.addInvoice(invoice,cipherText);
+            for (Map.Entry<Integer, ProductCart> productcart : cart.entrySet()) {
+                DetailInvoice detail = new DetailInvoice(Invoieid, productcart.getValue().pro.getIdProduct(), productcart.getValue().quantity, productcart.getValue().pro.getPriceNew());
+                details.adddetail(detail);
+                products pro = new products(productcart.getValue().pro.getIdProduct(),productcart.getValue().pro.getIdCategory(),productcart.getValue().pro.getNameProduct(),productcart.getValue().pro.getImage(),productcart.getValue().pro.getPriceNew(),productcart.getValue().pro.getPriceOld(),productcart.getValue().pro.getQuantityStock()-productcart.getValue().quantity,productcart.getValue().pro.getDescription(),productcart.getValue().pro.getIsnew(),productcart.getValue().pro.getDiscount());
+                p.updateProduct(pro);
+                System.out.println("thành công");
+            }
 
-        int Invoieid = ins.addInvoice(invoice);
-        for (Map.Entry<Integer, ProductCart> productcart : cart.entrySet()) {
-            DetailInvoice detail = new DetailInvoice(Invoieid, productcart.getValue().pro.getIdProduct(), productcart.getValue().quantity, productcart.getValue().pro.getPriceNew());
-            details.adddetail(detail);
-            products pro = new products(productcart.getValue().pro.getIdProduct(),productcart.getValue().pro.getIdCategory(),productcart.getValue().pro.getNameProduct(),productcart.getValue().pro.getImage(),productcart.getValue().pro.getPriceNew(),productcart.getValue().pro.getPriceOld(),productcart.getValue().pro.getQuantityStock()-productcart.getValue().quantity,productcart.getValue().pro.getDescription(),productcart.getValue().pro.getIsnew(),productcart.getValue().pro.getDiscount());
-            p.updateProduct(pro);
-            System.out.println("thành công");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+//        String cipherText = null;
+
+
         session.setAttribute("cart",null);
         if(phuonthucthanhtoan.equals("ck")){
             response.sendRedirect("/ck.jsp");
         }else {
             response.sendRedirect("/order");
         }
-    return;
+        return;
     }
 }

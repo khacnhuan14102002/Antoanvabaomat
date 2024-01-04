@@ -36,16 +36,19 @@
         <label>Publickey</label>
         <input name="pukey" type="text" class="form-control" value="<%= key %>">
         <% } %>
-        <button class="btn btn-success" style="margin-left:90px">Cập nhật</button>
-        <div class="dropdown" style="margin-top:-54px;margin-left:90px">
+        <button class="btn btn-success" style="margin-left:60px">Cập nhật</button>
+    <a href="/index">Trang chủ</a>
+        <div class="dropdown" style="margin-top:-54px;margin-left:150px">
             <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">Key
                 <span class="caret"></span></button>
             <ul class="dropdown-menu">
                 <li><a href="#" onclick="showKeyForm('Nhập Key')">Nhập Key</a></li>
                 <li><a href="#" onclick="reportKey()">Báo cáo Key</a></li>
                 <li><a href="#" onclick="generateKey()">Tạo Key</a></li>
+                <li><a href="#" onclick="forgotKey()">Quên Key</a></li>
             </ul>
         </div>
+
     </form>
 
 
@@ -78,6 +81,16 @@
         <!-- Display private key here -->
 
     </div>
+    <div id="quenKeyForm" style="display: none;">
+        <!-- Add your Tạo Key input form here -->
+        <form id="forgotKeyForm" action="forgot" method="get">
+            <!-- Add fields for key generation if needed -->
+            <button class="btn btn-warning">Quên Key</button>
+        </form>
+
+        <!-- Display private key here -->
+
+    </div>
     <div id="privateKeyContainer" style="display: none;">
         <!-- Display private key here -->
         <p style="color: red">Vui lòng nhớ Private Key và không cho người khác biết</p>
@@ -89,6 +102,7 @@
             document.getElementById('keyForm').style.display = 'none';
             document.getElementById('baoCaoKeyForm').style.display = 'none';
             document.getElementById('taoKeyForm').style.display = 'none';
+            document.getElementById('quenKeyForm').style.display = 'none';
         }
 
         function showKeyForm(option) {
@@ -105,13 +119,33 @@
             hideAllForms();
             document.getElementById('taoKeyForm').style.display = 'block';
         }
-
+        function forgotKey() {
+            hideAllForms();
+            document.getElementById('quenKeyForm').style.display = 'block';
+        }
 
         document.getElementById("createKeyForm").addEventListener("submit", function(event) {
             event.preventDefault();
 
             var xhr = new XMLHttpRequest();
             xhr.open("GET", "/KeyController", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    var response = xhr.responseText;
+
+                    // Assuming the response is just the private key string
+                    var privateKeyTextarea = document.getElementById("privateKey");
+                    privateKeyTextarea.value = response;
+                    document.getElementById("privateKeyContainer").style.display = "block";
+                }
+            };
+            xhr.send();
+        });
+        document.getElementById("forgotKeyForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/forgot", true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                     var response = xhr.responseText;

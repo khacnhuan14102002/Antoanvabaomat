@@ -113,6 +113,52 @@ public class InvoiceService {
         }
         return 0;
     }
+    public String getCipher(int idIn){
+        String query = "SELECT cipherText FROM invoices WHERE IdInvoice  = ? ";
+        try {
+            conn = new connect().getconConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1,idIn);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                String cipher= rs.getString(1);
+                return cipher;
+
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+    public Timestamp getTime(int idIn){
+        String query = "SELECT Exportdate FROM invoices WHERE IdInvoice  = ?";
+        try {
+            conn = new connect().getconConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1,idIn);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+               Timestamp time= rs.getTimestamp(1);
+                return time;
+
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+    public static void updateStat(int id,String sta) {
+        String query = "UPDATE invoices set StatusIn= ? where IdInvoice=?";
+        try {
+            conn = new connect().getconConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1,sta);
+            ps.setInt(2,id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("fail");
+        }
+    }
+
     public double totalMoneyMonth(int month) {
         String query = "select SUM(Total) from invoices where MONTH(Exportdate)=? Group by MONTH(Exportdate)";
         try {
@@ -131,7 +177,7 @@ public class InvoiceService {
 
     public static void main(String[] args) {
         InvoiceService in = new InvoiceService();
-        System.out.println(in.getAllIn(3));
+        System.out.println(in.getTime(29));
         //System.out.println(in.getAllInbyMonth("2023-05-01 00:00:00","2023-05-31 23:59:59"));
 
 

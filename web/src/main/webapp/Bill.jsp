@@ -229,11 +229,11 @@
     </script>
     <div class="total">
         <div class="signature-result" id="signatureResult"></div>
-        <form action="/kydl" method="post">
-            <button type="button" onclick="signInvoice()">Xác nhận và Ký số</button>
-        </form>
-        <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>
 
+        <p><strong>Tổng Cộng:</strong> ${invoice. getTotal()}</p>
+        <form action="/index" method="get">
+            <button type="submit" >Xác nhận</button>
+        </form>
     </div>
     <c:if test="${not empty sessionScope.successMessage}">
         <div class="success-message">${sessionScope.successMessage}</div>

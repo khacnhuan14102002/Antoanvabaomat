@@ -109,6 +109,7 @@
                             <td class="mn" >Tổng tiền</td>
                             <td class="td-qty mn" >Ngày mua</td>
                             <td class="mn">Trạng thái</td>
+                            <td class="mn">Xác Minh</td>
                         </tr>
                         </thead>
                     <c:forEach items="${requestScope.listIn}" var="l">
@@ -127,7 +128,14 @@
                                 ${l.datecreate}
                             </td>
 <%--                            trạng thái--%>
-                            <td >Đang chờ xác nhận</td>
+                            <td >${l.getStatusIn()}</td>
+                        <td>  <form action="/vetify" method="get">
+                            <input type="hidden" name="Idinvoice" value="${l.idIn}">
+                            <button type="submit" class="btn ">Xác minh</button>
+<%--                            <button type="submit" class="btn btn-xac-minh">Xác minh</button>--%>
+                        </form>
+
+                        </td>
             <td ><a href="detailinvoice?Idinvoice=${l.idIn}" >XEM CHI TIẾT</a></td>
                         </tr>
                         </c:forEach>
@@ -138,10 +146,30 @@
             <div class="btn-group btns-cart">
                 <button type="button" class="bt btn btn-primary"><i class="fa fa-arrow-circle-left"></i><a href="/index"> Trở về trang chủ</a></button>
             </div>
+
         </div>
     </div>
 </div>
 </div>
+<%--<div class="modal" tabindex="-1" role="dialog" id="myModal">--%>
+<%--    <div class="modal-dialog" role="document">--%>
+<%--        <div class="modal-content">--%>
+<%--            <div class="modal-header">--%>
+<%--                <h5 class="modal-title">Xác minh</h5>--%>
+<%--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">--%>
+<%--                    <span aria-hidden="true">&times;</span>--%>
+<%--                </button>--%>
+<%--            </div>--%>
+<%--            <div class="modal-body">--%>
+<%--                <!-- Content of the modal goes here -->--%>
+<%--                <p>${mess}</p>--%>
+<%--            </div>--%>
+<%--            <div class="modal-footer">--%>
+<%--                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--</div>--%>
 <script src="js/main.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
@@ -149,7 +177,15 @@
 <script src="js/nouislider.min.js"></script>
 <script src="js/jquery.zoom.min.js"></script>
 <script src="js/main.js"></script>
-
+<script>
+$(document).ready(function () {
+// Add a click event listener to the Xác minh button
+$(".btn-xac-minh").click(function () {
+// Show the modal
+$("#myModal").modal("show");
+});
+});
+</script>
 </body>
 
 </html>

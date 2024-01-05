@@ -262,19 +262,23 @@
                     <div class="input-checkbox">
                         <input type="checkbox" id="terms">
                     </div>
-                    <a style="border: #0f0f0f" onclick="openModal()">Thanh toan</a>
+                    <a style="border: 1px solid #0f0f0f; padding: 5px;" onclick="openModal()">Thanh toan</a>
 
                 </div>
             </div>
         </div>
     </div>
     <div id="myModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content"  >
             <label for="keyInput">Nhập Key:</label>
             <textarea type="text" id="keyInput" name ="keyInput" rows="10"></textarea>
             <br>
-            <button type = "submit">Xác Nhận</button>
-            <a onclick="closeModal()">Quay Về</a>
+            <button type = "submit" style=" border: 1px solid #0f0f0f;
+  padding: 5px;
+  display: inline-block;
+  width: 100px;
+  height: 30px;">Xác Nhận</button>
+            <a onclick="openModal()" style="border: 1px solid #0f0f0f; padding: 5px">Thanh toan</a>
         </div>
     </div>
 </form>

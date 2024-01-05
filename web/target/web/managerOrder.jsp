@@ -20,9 +20,16 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Thư viện jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Thư viện Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <link href="build/css/manager.css" rel="stylesheet" type="text/css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <style>
     img {
@@ -60,6 +67,7 @@
                 <th>Phương thức <br>thanh toán</th>
                 <th>Ngày đặt hàng</th>
                 <th>Trạng thái</th>
+                <th>Xác Minh</th>
             </tr>
             </thead>
             <tbody>
@@ -90,7 +98,15 @@
                 </td>
                 <td class="invoice-Date-<%=in_voice.getIdIn()%>"><%=in_voice.getDatecreate()%>
                 </td>
-                <td class="invoice-Status">Đang chờ xác nhận
+                <td class="invoice-Status"<%=in_voice.getIdIn()%>><%=in_voice.getStatusIn()%>
+                </td>
+               <td>  <form action="/vetify" method="get">
+                <input type="hidden" name="Idinvoice" value="<%=in_voice.getIdIn()%>">
+                   <input type="hidden" name="IdUser" value="<%=in_voice.getIdUs()%>">
+                <button type="submit" class="btn" id="vetifyButton">Xác minh</button>
+                <%--                            <button type="submit" class="btn btn-xac-minh">Xác minh</button>--%>
+            </form>
+
                 </td>
             </tr>
             <% }%>
@@ -141,6 +157,40 @@
         </div>
     </div>
 </div>
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Content of the modal goes here -->
+                <p style="color:red">${mess}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="build/js/manager.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function() {
+        // Gán sự kiện click cho nút "Xác minh"
+        $("#vetifyButton").click(function(event) {
+            // Ngăn chặn hành động mặc định của nút
+            event.preventDefault();
+
+            // Hiển thị modal
+            $("#myModal").modal("show");
+
+            // Thực hiện form submission
+            $("#verificationForm").submit();
+        });
+    });
+</script>
 </body>
 </html>

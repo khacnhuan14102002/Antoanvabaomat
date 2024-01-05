@@ -276,7 +276,7 @@
             <button type = "submit" style=" border: 1px solid #0f0f0f;
   padding: 5px;
   display: inline-block;
-  width: 100px; 
+  width: 100px;
   height: 30px;">Xác Nhận</button>
             <a onclick="openModal()" style="border: 1px solid #0f0f0f; padding: 5px">Thanh toan</a>
         </div>

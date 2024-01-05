@@ -52,7 +52,7 @@ public class CheckoutControll extends HttpServlet {
         }
         Date date = new Date();
         RSAKeyGenerator rsa = new RSAKeyGenerator();
-        Invoice invoice = new Invoice(name, diachi, phuonthucthanhtoan, "null", total, new Timestamp(new Date().getTime()), phone,idus);
+        Invoice invoice = new Invoice(name, diachi, phuonthucthanhtoan, "unconfimred", total, new Timestamp(new Date().getTime()), phone,idus);
         String cipher = rsa.hashObject(invoice);
         String priakey = request.getParameter("keyInput");
         try {

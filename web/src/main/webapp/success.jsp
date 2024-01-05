@@ -22,24 +22,27 @@
         <h4>Cập nhật thông tin</h4>
         <label>Họ tên</label>
         <input name="fullname" type="text" class="form-control" value="${user.getNameUser()}">
-        <label>email</label>
+        <label>Email</label>
         <input name="email" type="text" class="form-control" value="${user.getEmailUs()}">
         <label>Password</label>
         <input name="pass" type="password" class="form-control" value="${user.getPass()}">
         <label>Số điện thoại</label>
         <input name="sdt" type="text" class="form-control" value="${user.getPhone()}">
 
-        <%
-
-            String key = (String) request.getAttribute("key");
+        <% String key = (String) request.getAttribute("key");
             if(key != null) { %>
         <label>Publickey</label>
         <input name="pukey" type="text" class="form-control" value="<%= key %>">
         <% } %>
-        <button class="btn btn-success" style="margin-left:60px">Cập nhật</button>
+        <button class="btn btn-success" style="margin-left:40px">Xác nhận</button>
 
-        <div class="dropdown" style="margin-top:-54px;margin-left:150px">
-            <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">Key
+        <!-- Trang chủ (Homepage) button -->
+        <a href="/index" class="btn btn-primary" style="margin-left:120px;background-color: #5cb85c;
+    border-color: #4cae4c;">Trang chủ</a>
+
+
+        <div class="dropdown" >
+            <button class="btn btn-success dropdown-toggle" style="margin-top:-64px;margin-left:155px "type="button" data-toggle="dropdown">Key
                 <span class="caret"></span></button>
             <ul class="dropdown-menu">
                 <li><a href="#" onclick="showKeyForm('Nhập Key')">Nhập Key</a></li>
@@ -48,7 +51,6 @@
                 <li><a href="#" onclick="forgotKey()">Quên Key</a></li>
             </ul>
         </div>
-
     </form>
 
 

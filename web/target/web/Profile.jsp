@@ -28,6 +28,13 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="css/font-awesome.min.css">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+        <!-- Bootstrap JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
@@ -109,7 +116,7 @@
                             <td class="mn" >Tổng tiền</td>
                             <td class="td-qty mn" >Ngày mua</td>
                             <td class="mn">Trạng thái</td>
-                            <td class="mn">Xác Minh</td>
+
                         </tr>
                         </thead>
                     <c:forEach items="${requestScope.listIn}" var="l">
@@ -129,13 +136,7 @@
                             </td>
 <%--                            trạng thái--%>
                             <td >${l.getStatusIn()}</td>
-                        <td>  <form action="/vetify" method="get">
-                            <input type="hidden" name="Idinvoice" value="${l.idIn}">
-                            <button type="submit" class="btn ">Xác minh</button>
-<%--                            <button type="submit" class="btn btn-xac-minh">Xác minh</button>--%>
-                        </form>
-
-                        </td>
+                        <
             <td ><a href="detailinvoice?Idinvoice=${l.idIn}" >XEM CHI TIẾT</a></td>
                         </tr>
                         </c:forEach>
@@ -151,25 +152,7 @@
     </div>
 </div>
 </div>
-<%--<div class="modal" tabindex="-1" role="dialog" id="myModal">--%>
-<%--    <div class="modal-dialog" role="document">--%>
-<%--        <div class="modal-content">--%>
-<%--            <div class="modal-header">--%>
-<%--                <h5 class="modal-title">Xác minh</h5>--%>
-<%--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">--%>
-<%--                    <span aria-hidden="true">&times;</span>--%>
-<%--                </button>--%>
-<%--            </div>--%>
-<%--            <div class="modal-body">--%>
-<%--                <!-- Content of the modal goes here -->--%>
-<%--                <p>${mess}</p>--%>
-<%--            </div>--%>
-<%--            <div class="modal-footer">--%>
-<%--                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-<%--</div>--%>
+
 <script src="js/main.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
@@ -177,15 +160,8 @@
 <script src="js/nouislider.min.js"></script>
 <script src="js/jquery.zoom.min.js"></script>
 <script src="js/main.js"></script>
-<script>
-$(document).ready(function () {
-// Add a click event listener to the Xác minh button
-$(".btn-xac-minh").click(function () {
-// Show the modal
-$("#myModal").modal("show");
-});
-});
-</script>
+
+
 </body>
 
 </html>
